@@ -37,7 +37,7 @@ export function demoState(): GameState {
 
   return {
     started: true,
-    profile: { name: 'you', stage: 'firstjob', monthlyIncome: 32000, goal: 'habit', fear: 'losing' },
+    profile: { stage: 'firstjob', monthlyIncome: 32000, fear: 'losing' },
     regime,
     day,
     cash: STARTING_CASH - buys.reduce((t, b) => t + b[1], 0),
@@ -45,9 +45,8 @@ export function demoState(): GameState {
     trades,
     panics: [{ day: 47, drawdown: -18.4, choice: 'hold', deliberationMs: 11200 }],
     pendingPanic: null,
-    sessionsCompleted: 6,
     graduated: false,
     seenGlossary: [],
-    paycheckClaimed: true,
+    plan: { needs: 17000, buffer: 5000, wants: 7000, invest: 3000 },
   };
 }

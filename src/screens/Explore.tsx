@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { AlertTriangle, ArrowRight, Check, Search } from 'lucide-react';
 import { INSTRUMENTS, type Category, type Instrument } from '@/data/instruments';
-import { getMarketPath, priceOn } from '@/lib/market';
+import { dayChange, historyTo, PRE_DAYS, priceOn } from '@/lib/market';
 import { HORIZONS, REASONS, type HorizonId, type ReasonId } from '@/lib/types';
 import { useStore } from '@/state/store';
-import { inr, J, Option, pct, Sheet, SimBadge, Spark } from '@/components/ui';
+import { Avatar, inr, J, Option, pct, Sheet, SimBadge, Spark } from '@/components/ui';
 import type { Snapshot } from '@/lib/dna';
 
 const CATS: ('All' | Category)[] = ['All', 'Index Fund', 'Mutual Fund', 'Stock', 'Gold'];
@@ -36,12 +36,11 @@ export function Explore({ snap }: { snap: Snapshot }) {
       <div>
         {list.map((inst) => {
           const price = priceOn(s.regime, inst.id, s.day);
-          const prev = priceOn(s.regime, inst.id, Math.max(0, s.day - 1));
-          const chg = (price / prev - 1) * 100;
+          const chg = dayChange(s.regime, inst.id, s.day);
           const held = snap.positions.find((p) => p.lot.instrumentId === inst.id);
           return (
             <button key={inst.id} className="list-row" style={{ width: '100%', textAlign: 'left' }} onClick={() => setDetail(inst)}>
-              <div className="avatar" style={{ background: inst.color }}>{inst.short.slice(0, 2)}</div>
+              <Avatar id={inst.id} />
               <div className="grow">
                 <h4>{inst.name}</h4>
                 <div className="row" style={{ gap: 6 }}>
@@ -73,19 +72,21 @@ export function Explore({ snap }: { snap: Snapshot }) {
 
 function DetailSheet({ inst, onClose, onBuy }: { inst: Instrument; onClose: () => void; onBuy: () => void }) {
   const { s } = useStore();
-  const path = getMarketPath(s.regime);
-  const series = path.prices[inst.id].slice(0, Math.max(s.day + 1, 2));
+  // Price history runs from three months before day one up to today, so the
+  // chart has a shape on arrival and its last point always matches the list.
+  const series = historyTo(s.regime, inst.id, s.day);
   const price = series[series.length - 1];
   const chg = (price / series[0] - 1) * 100;
+  const months = Math.max(1, Math.round(((PRE_DAYS + s.day) / 250) * 12));
 
   return (
     <Sheet title={inst.name} onClose={onClose}>
       <div className="row" style={{ marginBottom: 12 }}>
-        <div className="avatar" style={{ background: inst.color, width: 44, height: 44 }}>{inst.short.slice(0, 2)}</div>
+        <Avatar id={inst.id} size={44} />
         <div className="grow">
           <div className="hero-value num" style={{ fontSize: 26 }}>{inr(price, price < 100 ? 2 : 0)}</div>
           <span className={`num ${chg >= 0 ? 'pos' : 'neg'}`} style={{ fontSize: 13, fontWeight: 600 }}>
-            {pct(chg)} since you started
+            {pct(chg)} over {months} months
           </span>
         </div>
         <SimBadge />
@@ -123,7 +124,7 @@ function DetailSheet({ inst, onClose, onBuy }: { inst: Instrument; onClose: () =
       </div>
 
       <button className="btn" onClick={onBuy}>Practice invest</button>
-      <p className="tiny" style={{ textAlign: 'center', marginTop: 10 }}>Fake rupees. Not a real order.</p>
+      <p className="tiny" style={{ textAlign: 'center', marginTop: 10 }}>Practice money. Not a real order.</p>
     </Sheet>
   );
 }
@@ -156,8 +157,8 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
           </div>
           <div className="h-section" style={{ fontSize: 17, marginBottom: 6 }}>{inr(value)} into {inst.name}</div>
           <p className="sub" style={{ maxWidth: 280, margin: '0 auto 18px' }}>
-            We have saved your reason and your <J t="horizon">horizon</J>. When you next look at this
-            holding, we will show you what you said here.
+            Saved, with your reason and your <J t="horizon">horizon</J>. Open this holding later and
+            you&rsquo;ll see what you said today.
           </p>
         </div>
         <div className="card flat" style={{ marginBottom: 16 }}>
@@ -179,18 +180,18 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
     return (
       <Sheet title="Why this one?" onClose={onClose}>
         <p className="sub" style={{ marginBottom: 14 }}>
-          Pick the honest answer, not the impressive one. Nothing here is blocked and nothing is judged
-          now. We will show it back to you when the outcome arrives.
+          Pick the honest one. Nothing is blocked and nothing gets marked right or wrong here. You&rsquo;ll
+          see this answer again later, next to what actually happened.
         </p>
         <div className="stack sm" style={{ marginBottom: 20 }}>
           {REASONS.map((r) => (
-            <Option key={r.id} on={reasonId === r.id} onClick={() => setReasonId(r.id)} title={`${r.emoji}  ${r.label}`} />
+            <Option key={r.id} on={reasonId === r.id} onClick={() => setReasonId(r.id)} title={r.label} />
           ))}
         </div>
 
         <div className="h-section" style={{ marginBottom: 4 }}>How long are you holding this?</div>
         <p className="tiny" style={{ marginBottom: 12 }}>
-          This becomes a promise. Selling before it is up costs you Patience points, not money.
+          Treat it as a promise to yourself. Selling before it&rsquo;s up costs Patience points, not money.
         </p>
         <div className="chips" style={{ marginBottom: 22, flexWrap: 'wrap' }}>
           {HORIZONS.map((h) => (
@@ -211,7 +212,7 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
   }
 
   return (
-    <Sheet title={`Practice invest in ${inst.short}`} onClose={onClose}>
+    <Sheet title={`Invest in ${inst.name}`} onClose={onClose}>
       <div className="row between" style={{ marginBottom: 16 }}>
         <span className="sub">Practice cash available</span>
         <b className="num" style={{ fontSize: 14, color: 'var(--ink)' }}>{inr(available)}</b>
@@ -228,7 +229,7 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
       </div>
       <div className="row between" style={{ marginBottom: 14 }}>
         <span className="tiny">{tooMuch ? <span className="neg">More than your practice cash</span> : `≈ ${units} units at ${inr(price, 2)}`}</span>
-        <SimBadge label="Fake money" />
+        <SimBadge label="Practice money" />
       </div>
 
       <div className="chips" style={{ marginBottom: 16 }}>
@@ -241,8 +242,8 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
       {concentration > 45 && !tooMuch && value > 0 && (
         <div className="card tint-amber" style={{ marginBottom: 16 }}>
           <p className="tiny" style={{ color: '#7a5206' }}>
-            This would put {Math.round(concentration)}% of your remaining practice cash into one holding.
-            That is allowed. It just means this one name will decide most of your result.
+            That&rsquo;s {Math.round(concentration)}% of your remaining practice cash in one place. You can,
+            it just means this one holding will decide most of how your year goes.
           </p>
         </div>
       )}

@@ -7,12 +7,13 @@ import type { Snapshot } from '@/lib/dna';
 type Msg = { role: 'ai' | 'me'; text: string; guard?: CoachReply['guard'] };
 
 const GUARD_LABEL: Record<NonNullable<CoachReply['guard']>, string> = {
-  'no-recommendation': 'Declined: personalised recommendation',
-  'no-guarantee': 'Declined: guaranteed return',
-  'no-prediction': 'Declined: price prediction',
-  'no-instruction': 'Declined: buy/sell instruction',
-  injection: 'Declined: instruction override',
-  'off-topic': 'Out of scope',
+  'no-recommendation': 'Won\u2019t pick for you',
+  'no-guarantee': 'Won\u2019t promise returns',
+  'no-prediction': 'Won\u2019t predict prices',
+  'no-instruction': 'Won\u2019t say buy or sell',
+  injection: 'Won\u2019t change its rules',
+  chasing: 'Chasing returns',
+  'off-topic': 'Outside what it covers',
 };
 
 export function Coach({ snap }: { snap: Snapshot }) {
@@ -20,7 +21,7 @@ export function Coach({ snap }: { snap: Snapshot }) {
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: 'ai',
-      text: 'I explain how investing works and what your practice portfolio is doing. I will not pick investments for you, predict prices, or promise returns. Not because I am being careful, but because nobody can do those things honestly.',
+      text: 'Ask me how anything works, or why your practice portfolio moved. I won\u2019t pick investments, predict prices or promise returns, because nobody can do those honestly.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -48,8 +49,7 @@ export function Coach({ snap }: { snap: Snapshot }) {
         <div className="row top" style={{ gap: 9 }}>
           <ShieldCheck size={15} color="var(--blue)" style={{ flex: 'none', marginTop: 1 }} />
           <p className="tiny" style={{ color: '#3a44a8' }}>
-            Four hard limits: no recommendations, no predictions, no guarantees, no buy or sell
-            instructions. When one fires, we show you which.
+            When the coach declines something, the label above its reply says what and why.
           </p>
         </div>
       </div>

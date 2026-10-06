@@ -85,7 +85,8 @@ export function traits(s: GameState, snap: Snapshot): Trait[] {
     return t.day - opened.day < horizon(opened.horizonId).days;
   }).length;
   const churn = s.trades.length ? sells.length / s.trades.length : 0;
-  const patienceScore = s.trades.length === 0 ? 0 : clamp(100 - broken * 26 - churn * 40);
+  // Not measurable on day one: nobody has been patient yet. Scored once a month has passed.
+  const patienceScore = s.trades.length === 0 || s.day < 20 ? 0 : clamp(100 - broken * 26 - churn * 40);
 
   // --- Composure: what you did the day the floor fell out.
   const panicScore = s.panics.length === 0
@@ -116,7 +117,7 @@ export function traits(s: GameState, snap: Snapshot): Trait[] {
         : `${snap.positions.length} holding${snap.positions.length > 1 ? 's' : ''} across ${cats} categor${cats > 1 ? 'ies' : 'y'}. Your largest is ${topWeight}% of the portfolio.`,
       nudge: topWeight > 40
         ? `${topWeight}% in one holding means that holding decides your result. Adding a second category would change that.`
-        : 'Your money is not depending on any single holding. Keep it that way as you add more.',
+        : 'No single holding is deciding your result. Worth keeping an eye on as you add more.',
     },
     {
       id: 'patience',
@@ -124,12 +125,14 @@ export function traits(s: GameState, snap: Snapshot): Trait[] {
       score: patienceScore,
       evidence: s.trades.length === 0
         ? 'No trades yet.'
-        : broken > 0
+        : s.day < 20
+          ? 'Too early to tell. Fast-forward at least a month and this starts counting.'
+          : broken > 0
           ? `You exited ${broken} position${broken > 1 ? 's' : ''} earlier than the horizon you set when you bought.`
           : `${sells.length} exit${sells.length === 1 ? '' : 's'} out of ${s.trades.length} decisions, all within the horizon you set.`,
       nudge: broken > 0
-        ? 'The horizon you pick at purchase is a promise to yourself. Breaking it is the most expensive habit a new investor can build.'
-        : 'Holding through a move you did not enjoy is the skill this mode exists to build.',
+        ? 'You picked that horizon before anything happened. Selling early usually means the price changed your mind, not new information.'
+        : 'So far you have stuck to the plans you made when you bought. That is harder than it sounds once the market moves.',
     },
     {
       id: 'composure',
@@ -139,8 +142,8 @@ export function traits(s: GameState, snap: Snapshot): Trait[] {
         ? 'The market has not tested you yet. Fast-forward until it does.'
         : s.panics.map((p) => `At a ${Math.abs(Math.round(p.drawdown))}% fall you chose to ${p.choice === 'buy' ? 'buy more' : p.choice}.`).join(' '),
       nudge: s.panics.some((p) => p.choice === 'sell')
-        ? 'Selling into a fall converts a paper loss into a real one. The fall is not the loss. The sale is.'
-        : 'You did not sell into a falling market. That single habit explains most of the gap between beginner and experienced returns.',
+        ? 'A fall only becomes a loss when you sell. In this year, the market came back after the point where you got out.'
+        : 'You did not sell into a falling market. Most of the difference between new and experienced investors comes down to that one habit.',
     },
     {
       id: 'conviction',
@@ -152,8 +155,8 @@ export function traits(s: GameState, snap: Snapshot): Trait[] {
           ? `₹${Math.round(hypeRupees).toLocaleString('en-IN')} of your money went in on a tip or on momentum.`
           : 'Every rupee you invested had a reason you could defend.',
       nudge: hypeRupees > 0
-        ? 'A reason you cannot repeat out loud is a reason you cannot act on again. That is what makes tips expensive.'
-        : 'Reasons you can restate are reasons you can review later. That is the whole trick.',
+        ? 'If you bought on a tip, you will need another tip to know when to sell. That is what makes them expensive.'
+        : 'Every rupee has a reason you can check later. That is what makes the replay useful.',
     },
   ];
 }
@@ -222,9 +225,32 @@ export function portfolioInsights(s: GameState, snap: Snapshot): { title: string
   if (sips && s.day > 60) {
     out.push({
       title: `${sips} of your holdings were bought for the long run`,
-      body: 'You set a multi-year horizon on these. Day-to-day movement on them is noise against that timeline, not information.',
+      body: 'You set a multi-year horizon on these. Over that long, this month\'s moves matter a lot less than they feel like they do.',
       tone: 'good',
     });
   }
   return out;
+}
+
+export type Gate = { id: 'two' | 'fall' | 'dna' | 'spread'; label: string; done: boolean; detail?: string };
+
+/**
+ * What stands between practice and a real SIP. Shared by Home and Graduate so
+ * the two screens can never disagree about whether someone is ready.
+ */
+export function gates(s: GameState, snap: Snapshot): Gate[] {
+  const buys = s.trades.filter((t) => t.kind === 'buy').length;
+  const held = s.panics.some((p) => p.choice !== 'sell');
+  const soldAtPanic = s.panics.some((p) => p.choice === 'sell');
+  const dna = overall(traits(s, snap));
+  const cats = new Set(snap.positions.map((p) => byId(p.lot.instrumentId).category)).size;
+  return [
+    { id: 'two', label: 'Make at least two practice investments', done: buys >= 2, detail: buys < 2 ? `${buys} of 2 so far` : undefined },
+    {
+      id: 'fall', label: 'Hold through one market fall', done: held,
+      detail: held ? undefined : soldAtPanic ? 'You sold at the last one. Reset or try another year for another go.' : 'Fast-forward until the market drops',
+    },
+    { id: 'dna', label: 'Reach an Investor DNA of 60', done: dna >= 60, detail: dna < 60 ? `You are at ${dna}` : undefined },
+    { id: 'spread', label: 'Hold more than one kind of investment', done: cats > 1, detail: cats <= 1 ? 'Stocks, index funds, mutual funds or gold' : undefined },
+  ];
 }

@@ -2,9 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { getMarketPath, priceOn, TRADING_DAYS, type RegimeId } from '@/lib/market';
 import { snapshot } from '@/lib/dna';
 import { demoState } from '@/state/demo';
-import { STARTING_CASH, type GameState, type HorizonId, type PanicChoice, type Profile, type ReasonId, type Trade } from '@/lib/types';
+import { STARTING_CASH, type GameState, type HorizonId, type PanicChoice, type Profile, type ReasonId, type SalaryPlan, type Trade } from '@/lib/types';
 
-const KEY = 'groww.practice.v2';
+const KEY = 'groww.practice.v3';
 
 const initial: GameState = {
   started: false,
@@ -16,10 +16,9 @@ const initial: GameState = {
   trades: [],
   panics: [],
   pendingPanic: null,
-  sessionsCompleted: 0,
   graduated: false,
   seenGlossary: [],
-  paycheckClaimed: false,
+  plan: null,
 };
 
 function load(): GameState {
@@ -48,6 +47,7 @@ type Store = {
   reset: () => void;
   setRegime: (id: RegimeId) => void;
   markGlossary: (term: string) => void;
+  setPlan: (plan: SalaryPlan) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -184,7 +184,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const reset = useCallback(() => {
-    setState((prev) => ({ ...initial, started: true, profile: prev.profile, regime: prev.regime }));
+    // The salary plan is about their real money, not this run, so it survives a reset.
+    setState((prev) => ({ ...initial, started: true, profile: prev.profile, regime: prev.regime, plan: prev.plan }));
   }, []);
 
   const setRegime = useCallback((id: RegimeId) => {
@@ -195,9 +196,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setState((prev) => (prev.seenGlossary.includes(term) ? prev : { ...prev, seenGlossary: [...prev.seenGlossary, term] }));
   }, []);
 
+  const setPlan = useCallback((plan: SalaryPlan) => {
+    setState((prev) => ({ ...prev, plan }));
+  }, []);
+
   const value = useMemo(
-    () => ({ s, set, start, buy, sell, advance, answerPanic, reset, setRegime, markGlossary }),
-    [s, set, start, buy, sell, advance, answerPanic, reset, setRegime, markGlossary],
+    () => ({ s, set, start, buy, sell, advance, answerPanic, reset, setRegime, markGlossary, setPlan }),
+    [s, set, start, buy, sell, advance, answerPanic, reset, setRegime, markGlossary, setPlan],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

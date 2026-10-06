@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Check, ChevronLeft, Info, X } from 'lucide-react';
-import { GLOSSARY } from '@/data/instruments';
+import { byId, GLOSSARY } from '@/data/instruments';
 import { useStore } from '@/state/store';
 
 export const inr = (n: number, decimals = 0) =>
@@ -185,5 +185,59 @@ export function Empty({ icon, title, body, cta }: { icon: ReactNode; title: stri
       <p className="sub" style={{ maxWidth: 270, margin: '0 auto 18px' }}>{body}</p>
       {cta}
     </div>
+  );
+}
+
+/** Instrument avatar. Ticker-style code, sized to fit, the way a brokerage list shows it. */
+export function Avatar({ id, size = 40 }: { id: string; size?: number }) {
+  const inst = byId(id);
+  const fs = inst.mono.length >= 4 ? size * 0.24 : inst.mono.length === 3 ? size * 0.27 : size * 0.32;
+  return (
+    <div className="avatar" style={{ background: inst.color, width: size, height: size, fontSize: fs, borderRadius: size * 0.28 }}>
+      {inst.mono}
+    </div>
+  );
+}
+
+/**
+ * Two series on one scale: you and the market, both rebased to 100 on day one.
+ * The gap between the lines is the part of the result the user controlled.
+ */
+export function Lines({ you, market, height = 110, markers = [] }: {
+  you: number[]; market: number[]; height?: number;
+  markers?: { at: number; tone: 'good' | 'bad' }[];
+}) {
+  const n = Math.max(you.length, market.length);
+  if (n < 2) return <div style={{ height }} />;
+  const w = 320;
+  const all = [...you, ...market];
+  const min = Math.min(...all), max = Math.max(...all), span = max - min || 1;
+  const x = (i: number) => (i / (n - 1)) * w;
+  const y = (v: number) => height - 6 - ((v - min) / span) * (height - 14);
+  const path = (d: number[]) => d.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const youColor = you[you.length - 1] >= 100 ? 'var(--green)' : 'var(--red)';
+  return (
+    <svg viewBox={`0 0 ${w} ${height}`} width="100%" height={height} preserveAspectRatio="none" style={{ display: 'block', overflow: 'visible' }}>
+      <line x1="0" x2={w} y1={y(100)} y2={y(100)} stroke="var(--line)" strokeDasharray="3 4" vectorEffect="non-scaling-stroke" />
+      <path d={path(market)} fill="none" stroke="var(--ink-4)" strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
+      <path d={path(you)} fill="none" stroke={youColor} strokeWidth="2.2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      {markers.filter((m) => m.at < you.length).map((m, i) => (
+        <circle key={i} cx={x(m.at)} cy={y(you[m.at])} r="4" fill={m.tone === 'bad' ? 'var(--red)' : 'var(--green)'} stroke="#fff" strokeWidth="2" />
+      ))}
+    </svg>
+  );
+}
+
+/** In-app confirmation. Replaces window.confirm, which breaks the phone illusion and looks broken on mobile. */
+export function Confirm({ title, body, yes, no = 'Cancel', danger, onYes, onNo }: {
+  title: string; body: ReactNode; yes: string; no?: string; danger?: boolean; onYes: () => void; onNo: () => void;
+}) {
+  return (
+    <Modal onClose={onNo}>
+      <div className="h-section" style={{ fontSize: 17, marginBottom: 8 }}>{title}</div>
+      <p className="sub" style={{ marginBottom: 18 }}>{body}</p>
+      <button className={`btn ${danger ? 'danger' : ''}`} onClick={onYes}>{yes}</button>
+      <button className="btn ghost" style={{ marginTop: 9 }} onClick={onNo}>{no}</button>
+    </Modal>
   );
 }

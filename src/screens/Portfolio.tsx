@@ -5,7 +5,7 @@ import { portfolioInsights, type Position, type Snapshot } from '@/lib/dna';
 import { horizon, reason, type Trade } from '@/lib/types';
 import { dayLabel } from '@/lib/market';
 import { useStore } from '@/state/store';
-import { Donut, Empty, inr, J, Modal, Option, pct, Sheet, signed } from '@/components/ui';
+import { Avatar, Confirm, Donut, Empty, inr, J, Option, pct, Sheet, signed } from '@/components/ui';
 import type { Tab } from '@/App';
 
 export function Portfolio({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }) {
@@ -20,7 +20,7 @@ export function Portfolio({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }
         <Empty
           icon={<PieChart size={26} />}
           title="Nothing in here yet"
-          body="Your practice portfolio is empty. Put some fake rupees to work and this page starts explaining what your choices are doing."
+          body="Nothing invested yet. Once you put some practice money to work, this page explains what your choices are doing."
           cta={<button className="btn sm" onClick={() => go('explore')}><Compass size={15} /> Explore investments</button>}
         />
       </div>
@@ -54,7 +54,7 @@ export function Portfolio({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }
           const inst = byId(p.lot.instrumentId);
           return (
             <button key={p.lot.instrumentId} className="list-row" style={{ width: '100%', textAlign: 'left' }} onClick={() => setOpen(p)}>
-              <div className="avatar" style={{ background: inst.color }}>{inst.short.slice(0, 2)}</div>
+              <Avatar id={inst.id} />
               <div className="grow">
                 <h4>{inst.name}</h4>
                 <span className="tiny num">{Math.round(p.weight)}% &middot; {inr(p.invested)} invested</span>
@@ -83,8 +83,7 @@ export function Portfolio({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }
             ))}
           </div>
           <p className="tiny" style={{ marginBottom: 20 }}>
-            These describe what your allocation does, not what you should do next. Practice Mode does not
-            give recommendations.
+            These describe what your mix is doing. They aren&rsquo;t suggestions for what to do next.
           </p>
         </>
       )}
@@ -96,15 +95,13 @@ export function Portfolio({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }
       {open && <HoldingSheet pos={open} onClose={() => setOpen(null)} />}
 
       {confirmReset && (
-        <Modal onClose={() => setConfirmReset(false)}>
-          <div className="h-section" style={{ fontSize: 17, marginBottom: 8 }}>Start the year again?</div>
-          <p className="sub" style={{ marginBottom: 18 }}>
-            Your holdings, your trades, your Decision Journal and your Investor DNA all go back to zero,
-            and your practice cash returns to &#8377;1,00,000.
-          </p>
-          <button className="btn danger" onClick={() => { reset(); setConfirmReset(false); go('home'); }}>Yes, reset everything</button>
-          <button className="btn ghost" style={{ marginTop: 9 }} onClick={() => setConfirmReset(false)}>Keep my run</button>
-        </Modal>
+        <Confirm
+          title="Start the year again?"
+          body="Holdings, trades, your journal and your Investor DNA all go back to zero, and you get the full ₹1,00,000 again. Your salary plan stays."
+          yes="Reset everything" no="Keep my run" danger
+          onYes={() => { reset(); setConfirmReset(false); go('home'); }}
+          onNo={() => setConfirmReset(false)}
+        />
       )}
     </div>
   );
@@ -126,22 +123,22 @@ function HoldingSheet({ pos, onClose }: { pos: Position; onClose: () => void }) 
 
   if (selling) {
     return (
-      <Sheet title={`Exit ${inst.short}`} onClose={onClose}>
+      <Sheet title={`Sell ${inst.name}`} onClose={onClose}>
         {early && (
           <div className="card tint-amber" style={{ marginBottom: 16 }}>
             <b style={{ fontSize: 13.5, color: 'var(--ink)', fontWeight: 650, display: 'block', marginBottom: 5 }}>
               You said you would hold this for {h.label.toLowerCase()}
             </b>
             <p className="sub" style={{ fontSize: 13, color: '#7a5206' }}>
-              It has been {held} trading days. Selling now is allowed. We are not going to stop you.
-              It will show up in your Patience score, and in your replay at the end of the year.
+              It&rsquo;s been {held} trading days. You can still sell. It&rsquo;ll just count against
+              Patience and show up in your replay.
             </p>
           </div>
         )}
         <div className="h-section" style={{ marginBottom: 10 }}>Why are you selling?</div>
         <div className="stack sm" style={{ marginBottom: 20 }}>
           <Option on={exit === 'target'} onClick={() => setExit('target')} title="I got what I came for" note="The reason I bought it has played out" />
-          <Option on={exit === 'scared'} onClick={() => setExit('scared')} title="It is falling and I want out" note="The most honest answer most people never give" />
+          <Option on={exit === 'scared'} onClick={() => setExit('scared')} title="It's falling and I want out" note="Most people feel this. Few say it" />
           <Option on={exit === 'needed'} onClick={() => setExit('needed')} title="I need the money for something else" note="A plan changed, not a view" />
           <Option on={exit === 'wrong'} onClick={() => setExit('wrong')} title="I was wrong about this one" note="My original reason no longer holds" />
         </div>
@@ -176,7 +173,7 @@ function HoldingSheet({ pos, onClose }: { pos: Position; onClose: () => void }) 
           What you said on {dayLabel(pos.lot.openedDay)}
         </div>
         <p style={{ fontSize: 15, color: 'var(--ink)', fontWeight: 600, lineHeight: 1.45, marginBottom: 8 }}>
-          &ldquo;{r.emoji} {r.label}&rdquo;
+          &ldquo;{r.label}&rdquo;
         </p>
         <p className="sub" style={{ fontSize: 13 }}>
           You set a <J t="horizon">horizon</J> of {h.label.toLowerCase()}. {held} trading days have passed.
@@ -186,12 +183,12 @@ function HoldingSheet({ pos, onClose }: { pos: Position; onClose: () => void }) 
       <div className="card flat" style={{ marginBottom: 18 }}>
         <p className="sub" style={{ fontSize: 13 }}>
           {early
-            ? `Between now and the end of your horizon, this position will move around a lot. Those moves are not new information about ${inst.name}. They are the price of the horizon you chose.`
-            : `Your horizon is up. This is the moment to ask whether the reason you wrote down still holds, rather than whether the price went your way.`}
+            ? `It will move around a lot before your horizon is up. Most of those moves say more about the market's mood than about ${inst.name}.`
+            : `Your horizon is up. Worth asking whether the reason you wrote down still holds, rather than whether the price went your way.`}
         </p>
       </div>
 
-      <button className="btn ghost" onClick={() => setSelling(true)}>Exit this position</button>
+      <button className="btn ghost" onClick={() => setSelling(true)}>Sell this holding</button>
     </Sheet>
   );
 }
