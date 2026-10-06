@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* --------------------------------------------------------------------------
+   Groww design tokens. Pulled from the live app so Practice Mode reads as a
+   tab inside Groww rather than as a third-party demo wearing its colours.
+   -------------------------------------------------------------------------- */
+:root {
+  --green: #00d09c;
+  --green-dark: #00b386;
+  --green-soft: #e6faf5;
+  --blue: #5367ff;
+  --blue-soft: #eef0ff;
+  --red: #eb5b3c;
+  --red-soft: #fdece8;
+  --amber: #f5a623;
+  --amber-soft: #fff6e6;
+
+  --ink: #121212;
+  --ink-2: #44475b;
+  --ink-3: #7c7e8c;
+  --ink-4: #a8aab5;
+
+  --bg: #ffffff;
+  --surface: #f8f8f8;
+  --surface-2: #f1f2f4;
+  --line: #e9e9eb;
+  --line-2: #f1f1f3;
+
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --shadow: 0 1px 2px rgba(18, 18, 18, 0.04), 0 4px 16px rgba(18, 18, 18, 0.06);
+  --shadow-lg: 0 8px 40px rgba(18, 18, 18, 0.12);
+  --phone-w: 400px;
+  --phone-h: 844px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body, #root { height: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ink-2);
+  background: #eef0f4;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 1;
+}
+
+button { font: inherit; color: inherit; border: none; background: none; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; border: none; outline: none; background: none; }
+a { color: inherit; text-decoration: none; }
+
+/* --------------------------------------------------------------------------
+   Desktop stage: the phone on the right, the pitch on the left. On a phone the
+   stage collapses and the app simply fills the screen.
+   -------------------------------------------------------------------------- */
+.stage {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--phone-w);
+  gap: 64px;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.pitch { max-width: 520px; justify-self: end; }
+.pitch-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+.pitch-logo img { width: 34px; height: 34px; }
+.pitch-logo span { font-weight: 700; font-size: 20px; color: var(--ink); letter-spacing: -0.02em; }
+.pitch-logo em { font-style: normal; font-weight: 600; font-size: 13px; color: var(--green-dark); background: var(--green-soft); padding: 4px 9px; border-radius: 99px; }
+.pitch h1 { font-size: 42px; line-height: 1.1; letter-spacing: -0.035em; color: var(--ink); font-weight: 800; margin-bottom: 18px; }
+.pitch h1 b { color: var(--green-dark); font-weight: 800; }
+.pitch > p { font-size: 17px; line-height: 1.6; color: var(--ink-3); margin-bottom: 28px; }
+.pitch-points { display: grid; gap: 14px; margin-bottom: 28px; }
+.pitch-point { display: flex; gap: 13px; align-items: flex-start; }
+.pitch-point i { flex: none; width: 30px; height: 30px; border-radius: 9px; background: var(--bg); display: grid; place-items: center; color: var(--green-dark); box-shadow: var(--shadow); }
+.pitch-point b { display: block; font-size: 14.5px; color: var(--ink); font-weight: 650; margin-bottom: 2px; }
+.pitch-point span { font-size: 13.5px; line-height: 1.5; color: var(--ink-3); }
+.pitch-foot { font-size: 12.5px; color: var(--ink-4); line-height: 1.6; border-top: 1px solid #dfe2e8; padding-top: 18px; }
+
+/* --------------------------------------------------------------------------
+   Phone
+   -------------------------------------------------------------------------- */
+.phone {
+  width: var(--phone-w);
+  height: var(--phone-h);
+  max-height: calc(100vh - 96px);
+  background: var(--bg);
+  border-radius: 44px;
+  border: 10px solid #15161a;
+  box-shadow: var(--shadow-lg), 0 0 0 2px #2c2e36;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.notch {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 118px; height: 26px; background: #15161a; border-radius: 0 0 16px 16px; z-index: 60;
+}
+.statusbar {
+  flex: none; height: 44px; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 24px 4px; font-size: 12px; font-weight: 600; color: var(--ink); z-index: 61; position: relative;
+}
+.statusbar .bars { display: flex; gap: 4px; align-items: center; }
+
+.viewport { flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; position: relative; }
+.viewport::-webkit-scrollbar { width: 0; }
+.pad { padding: 0 16px 24px; }
+
+/* --------------------------------------------------------------------------
+   App chrome
+   -------------------------------------------------------------------------- */
+.appbar {
+  position: sticky; top: 0; z-index: 30; background: var(--bg);
+  display: flex; align-items: center; gap: 12px; padding: 10px 16px 12px;
+  border-bottom: 1px solid var(--line-2);
+}
+.appbar h2 { font-size: 17px; font-weight: 650; color: var(--ink); letter-spacing: -0.015em; flex: 1; }
+.appbar button { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-2); }
+.appbar button:hover { background: var(--surface); }
+
+.tabbar {
+  flex: none; display: grid; grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid var(--line); background: var(--bg); padding: 8px 4px 14px; z-index: 40;
+}
+.tabbar button { display: grid; justify-items: center; gap: 4px; color: var(--ink-4); font-size: 10.5px; font-weight: 550; padding: 2px 0; }
+.tabbar button.on { color: var(--green-dark); }
+
+/* --------------------------------------------------------------------------
+   Primitives
+   -------------------------------------------------------------------------- */
+.card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 16px; }
+.card.flat { border: none; background: var(--surface); }
+.card.tint-green { background: var(--green-soft); border-color: #c7f0e5; }
+.card.tint-blue { background: var(--blue-soft); border-color: #d9ddff; }
+.card.tint-amber { background: var(--amber-soft); border-color: #fde8bf; }
+.card.tint-red { background: var(--red-soft); border-color: #fbd8d0; }
+
+.stack { display: grid; gap: 12px; }
+.stack.lg { gap: 16px; }
+.stack.sm { gap: 8px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.row.between { justify-content: space-between; }
+.row.top { align-items: flex-start; }
+.grow { flex: 1; min-width: 0; }
+
+.h-section { font-size: 15px; font-weight: 650; color: var(--ink); letter-spacing: -0.01em; }
+.h-screen { font-size: 24px; font-weight: 750; color: var(--ink); letter-spacing: -0.03em; line-height: 1.2; }
+.sub { font-size: 13px; color: var(--ink-3); line-height: 1.55; }
+.tiny { font-size: 11.5px; color: var(--ink-4); line-height: 1.5; }
+.num { font-variant-numeric: tabular-nums; }
+.pos { color: var(--green-dark); }
+.neg { color: var(--red); }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--green); color: #fff; font-weight: 650; font-size: 15px;
+  height: 50px; border-radius: var(--r); width: 100%; transition: filter .15s, transform .08s;
+}
+.btn:hover { filter: brightness(1.04); }
+.btn:active { transform: scale(.985); }
+.btn:disabled { background: var(--surface-2); color: var(--ink-4); cursor: not-allowed; }
+.btn.ghost { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
+.btn.ghost:hover { background: var(--surface); }
+.btn.blue { background: var(--blue); }
+.btn.sm { height: 40px; font-size: 13.5px; border-radius: 10px; width: auto; padding: 0 16px; }
+.btn.danger { background: var(--bg); color: var(--red); border: 1.5px solid #f7cdc3; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 13px;
+  border-radius: 99px; background: var(--surface); color: var(--ink-2);
+  font-size: 12.5px; font-weight: 550; border: 1px solid transparent; white-space: nowrap;
+}
+.chip.on { background: var(--ink); color: #fff; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.chips::-webkit-scrollbar { display: none; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px;
+  font-size: 10.5px; font-weight: 650; letter-spacing: .02em; text-transform: uppercase;
+}
+.badge.sim { background: var(--amber-soft); color: #9a6508; }
+.badge.low { background: var(--green-soft); color: var(--green-dark); }
+.badge.moderate { background: var(--blue-soft); color: #3d4ed6; }
+.badge.high { background: var(--red-soft); color: #c0432a; }
+
+.divider { height: 1px; background: var(--line-2); }
+
+/* Jargon underline — the tap-to-explain affordance. */
+.jargon { border-bottom: 1.5px dotted var(--ink-4); cursor: pointer; font-weight: 550; color: inherit; }
+.jargon:hover { border-bottom-color: var(--green); color: var(--green-dark); }
+
+/* --------------------------------------------------------------------------
+   Sheets & modals
+   -------------------------------------------------------------------------- */
+.scrim {
+  position: absolute; inset: 0; background: rgba(18, 18, 18, .45); z-index: 90;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  animation: fade .2s ease;
+}
+.scrim.center { justify-content: center; padding: 20px; }
+.sheet {
+  background: var(--bg); border-radius: 22px 22px 0 0; max-height: 86%; overflow-y: auto;
+  animation: rise .26s cubic-bezier(.22,.9,.3,1);
+}
+.sheet::-webkit-scrollbar { width: 0; }
+.sheet-grab { width: 38px; height: 4px; background: var(--line); border-radius: 99px; margin: 10px auto 4px; }
+.sheet-head { position: sticky; top: 0; background: var(--bg); padding: 6px 16px 12px; display: flex; align-items: center; gap: 10px; z-index: 2; }
+.sheet-head h3 { font-size: 17px; font-weight: 700; color: var(--ink); flex: 1; letter-spacing: -0.02em; }
+.sheet-body { padding: 0 16px 20px; }
+.modal { background: var(--bg); border-radius: 20px; padding: 22px; animation: pop .22s cubic-bezier(.22,.9,.3,1); }
+
+@keyframes fade { from { opacity: 0 } }
+@keyframes rise { from { transform: translateY(100%) } }
+@keyframes pop { from { transform: scale(.93); opacity: 0 } }
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .45 } }
+
+/* --------------------------------------------------------------------------
+   Screen-specific
+   -------------------------------------------------------------------------- */
+.hero-value { font-size: 34px; font-weight: 750; color: var(--ink); letter-spacing: -0.035em; line-height: 1.05; }
+
+.ring { display: grid; place-items: center; position: relative; }
+.ring b { position: absolute; font-size: 22px; font-weight: 750; color: var(--ink); letter-spacing: -0.02em; text-align: center; }
+.ring b small { display: block; font-size: 9px; font-weight: 600; color: var(--ink-4); letter-spacing: .06em; text-transform: uppercase; margin-top: 1px; }
+
+.meter { height: 7px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 99px; transition: width .5s cubic-bezier(.22,.9,.3,1); }
+
+.list-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; }
+.list-row + .list-row { border-top: 1px solid var(--line-2); }
+.avatar { flex: none; width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 750; letter-spacing: -0.02em; }
+.list-row h4 { font-size: 14.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.list-row .right { text-align: right; flex: none; }
+.list-row .right b { display: block; font-size: 14.5px; font-weight: 650; color: var(--ink); }
+.list-row .right span { font-size: 12px; font-weight: 550; }
+
+.option {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r);
+  border: 1.5px solid var(--line); background: var(--bg); text-align: left; width: 100%; transition: all .14s;
+}
+.option:hover { border-color: var(--ink-4); }
+.option.on { border-color: var(--green); background: var(--green-soft); }
+.option b { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
+.option span { font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
+.option .tick { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; }
+.option.on .tick { background: var(--green); border-color: var(--green); color: #fff; }
+
+.amount-field { display: flex; align-items: center; gap: 6px; border-bottom: 2px solid var(--green); padding-bottom: 8px; }
+.amount-field span { font-size: 28px; font-weight: 700; color: var(--ink); }
+.amount-field input { font-size: 28px; font-weight: 700; color: var(--ink); width: 100%; letter-spacing: -0.02em; }
+
+.bubble { max-width: 86%; padding: 11px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.55; }
+.bubble.ai { background: var(--surface); color: var(--ink-2); border-bottom-left-radius: 5px; align-self: flex-start; }
+.bubble.me { background: var(--green); color: #fff; border-bottom-right-radius: 5px; align-self: flex-end; }
+.composer { position: sticky; bottom: 0; background: var(--bg); padding: 10px 0 2px; display: flex; gap: 8px; align-items: center; border-top: 1px solid var(--line-2); }
+.composer input { flex: 1; height: 44px; background: var(--surface); border-radius: 99px; padding: 0 16px; font-size: 13.5px; }
+.composer button { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; }
+.composer button:disabled { background: var(--surface-2); color: var(--ink-4); }
+
+.timeline { position: relative; padding-left: 26px; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.tl-item { position: relative; padding-bottom: 18px; }
+.tl-item::before {
+  content: ''; position: absolute; left: -23px; top: 4px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--bg); border: 2.5px solid var(--ink-4);
+}
+.tl-item.good::before { border-color: var(--green); }
+.tl-item.bad::before { border-color: var(--red); }
+
+.scenario { position: relative; overflow: hidden; }
+.scenario.running::after {
+  content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(0,208,156,.12), transparent);
+  animation: sweep 1.1s linear infinite;
+}
+@keyframes sweep { from { transform: translateX(-100%) } to { transform: translateX(100%) } }
+
+.alarm { animation: pulse 1.2s ease-in-out infinite; }
+
+/* --------------------------------------------------------------------------
+   Responsive: below 1100px the pitch stacks above; on a real phone the frame
+   disappears entirely and the app goes full bleed.
+   -------------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .stage { grid-template-columns: minmax(0, var(--phone-w)); gap: 36px; padding: 32px 20px 48px; }
+  .pitch { justify-self: center; max-width: var(--phone-w); }
+  .pitch h1 { font-size: 32px; }
+}
+@media (max-width: 460px) {
+  body { background: var(--bg); }
+  .stage { padding: 0; gap: 0; grid-template-columns: 1fr; }
+  .pitch { display: none; }
+  .phone { width: 100%; height: 100dvh; max-height: 100dvh; border: none; border-radius: 0; box-shadow: none; }
+  .notch, .statusbar { display: none; }
+  .tabbar { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
