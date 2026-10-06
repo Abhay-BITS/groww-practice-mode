@@ -39,7 +39,7 @@ export function DNA({ snap }: { snap: Snapshot }) {
               <div key={t.id} className="card">
                 <div className="row between" style={{ marginBottom: 8 }}>
                   <b style={{ fontSize: 15, color: 'var(--ink)', fontWeight: 650 }}>{t.label}</b>
-                  <b className="num" style={{ fontSize: 15, color: scoreColor(t.score) }}>{t.score || '—'}</b>
+                  <b className="num" style={{ fontSize: 15, color: scoreColor(t.score) }}>{t.score || '\u2013'}</b>
                 </div>
                 <div style={{ marginBottom: 10 }}><Meter value={t.score} color={scoreColor(t.score)} /></div>
                 <p className="sub" style={{ fontSize: 13, marginBottom: 7 }}>{t.evidence}</p>
@@ -138,7 +138,7 @@ function Replay() {
               {t.kind === 'buy' ? (
                 <div className="card flat" style={{ padding: 11 }}>
                   <p style={{ fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5 }}>
-                    &ldquo;{r.emoji} {r.label}&rdquo; &mdash; holding for {h.label.toLowerCase()}.
+                    &ldquo;{r.emoji} {r.label}&rdquo;, holding for {h.label.toLowerCase()}.
                   </p>
                 </div>
               ) : (

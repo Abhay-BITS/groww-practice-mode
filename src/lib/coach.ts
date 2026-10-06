@@ -37,7 +37,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   if (has(q, 'guarantee', 'guaranteed', 'risk free', 'risk-free', 'sure shot', 'sure-shot', 'assured return')) {
     return {
       guard: 'no-guarantee',
-      text: `No. Nobody can guarantee an investment return, and anyone who does is either wrong or selling you something. Equity returns are not promised at any horizon — what a long horizon changes is the odds, not the certainty. Even the simulated results in Practice Mode are modelled, not promised. ${DISCLAIM}`,
+      text: `No. Nobody can guarantee an investment return, and anyone who does is either wrong or selling you something. Equity returns are not promised at any horizon. What a long horizon changes is the odds, not the certainty. Even the simulated results in Practice Mode are modelled, not promised. ${DISCLAIM}`,
     };
   }
 
@@ -45,7 +45,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   if (has(q, 'will it go up', 'will this go up', 'will this stock', 'next month', 'target price', 'prediction', 'predict', 'forecast', 'multibagger', 'will the market')) {
     return {
       guard: 'no-prediction',
-      text: `I can’t tell you where a price is going. Nobody can, consistently — that is the whole reason diversification and time horizon exist as ideas. What I can tell you is what moves this kind of investment: for a single stock it is company results and sentiment; for an index fund it is the whole market. If your decision only works when a price goes up soon, it isn’t a decision, it’s a bet. ${DISCLAIM}`,
+      text: `I can’t tell you where a price is going. Nobody can, consistently. That is the whole reason diversification and time horizon exist as ideas. What I can tell you is what moves this kind of investment: for a single stock it is company results and sentiment; for an index fund it is the whole market. If your decision only works when a price goes up soon, it isn’t a decision, it’s a bet. ${DISCLAIM}`,
     };
   }
 
@@ -53,7 +53,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   if (has(q, 'which stock should', 'what should i buy', 'which fund should', 'should i buy', 'what stock should', 'tell me what to buy', 'best stock', 'best fund', 'where should i invest', 'which one should i')) {
     return {
       guard: 'no-recommendation',
-      text: `I can’t pick one for you — that’s advice, and I’m not an adviser. What I can do is give you the questions that narrow it down:\n\n• When do you need this money back? Under three years, equity is the wrong tool.\n• How much of your total money is this? If it’s most of it, concentration matters more than upside.\n• Can you explain what the thing does in one sentence? If not, that’s your answer for now.\n• What would make you sell? Decide that before you buy, not during a fall.\n\nIn Practice Mode you can test any of these with fake rupees and see what it does to your portfolio. ${DISCLAIM}`,
+      text: `I can’t pick one for you. That’s advice, and I’m not an adviser. What I can do is give you the questions that narrow it down:\n\n• When do you need this money back? Under three years, equity is the wrong tool.\n• How much of your total money is this? If it’s most of it, concentration matters more than upside.\n• Can you explain what the thing does in one sentence? If not, that’s your answer for now.\n• What would make you sell? Decide that before you buy, not during a fall.\n\nIn Practice Mode you can test any of these with fake rupees and see what it does to your portfolio. ${DISCLAIM}`,
     };
   }
 
@@ -62,14 +62,14 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
     const held = snap.positions.length;
     return {
       guard: 'no-instruction',
-      text: `I’m not going to tell you to sell or to hold — but here is what is actually true about the moment you’re in.\n\nA fall is not a loss. It becomes one when you sell. ${held ? `Your ${held} holding${held > 1 ? 's are' : ' is'} currently showing ${snap.value >= snap.invested ? 'a gain' : 'a fall'} of ${Math.abs(((snap.value / Math.max(snap.invested, 1)) - 1) * 100).toFixed(1)}% against what you put in.` : ''}\n\nThe questions worth asking: has the reason you bought actually changed, or has only the price changed? Do you need this money in the next year? If the reason is intact and you don’t need the money, a fall is information about the price, not about your decision. ${DISCLAIM}`,
+      text: `I’m not going to tell you to sell or to hold. But here is what is actually true about the moment you’re in.\n\nA fall is not a loss. It becomes one when you sell. ${held ? `Your ${held} holding${held > 1 ? 's are' : ' is'} currently showing ${snap.value >= snap.invested ? 'a gain' : 'a fall'} of ${Math.abs(((snap.value / Math.max(snap.invested, 1)) - 1) * 100).toFixed(1)}% against what you put in.` : ''}\n\nThe questions worth asking: has the reason you bought actually changed, or has only the price changed? Do you need this money in the next year? If the reason is intact and you don’t need the money, a fall is information about the price, not about your decision. ${DISCLAIM}`,
     };
   }
 
   // ---- Helpful answers -----------------------------------------------------
   if (has(q, 'why did my portfolio', 'why is my portfolio', 'portfolio fall', 'portfolio drop', 'portfolio down', 'why did i lose')) {
     if (!snap.positions.length) {
-      return { text: `Your practice portfolio has nothing in it yet, so there is nothing to explain. Put some fake rupees into one or two things and come back — then I can tell you exactly which holding moved your number and by how much.` };
+      return { text: `Your practice portfolio has nothing in it yet, so there is nothing to explain. Put some fake rupees into one or two things and come back, then I can tell you exactly which holding moved your number and by how much.` };
     }
     const top = snap.largest!;
     const name = byId(top.lot.instrumentId).name;
@@ -84,19 +84,19 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   }
 
   if (has(q, 'index fund', 'what is an index', 'nifty')) {
-    return { text: `An index is just a fixed list of companies — the Nifty 50 is India’s fifty largest listed companies. An index fund buys that whole list and nothing else.\n\nSo you get the average result of those fifty companies, minus a very small fee. No fund manager picking winners, no one to blame, no one to pay much.\n\nThe honest catch: you will never beat the market with it, because you are the market. For most people starting out, matching the market cheaply beats trying to beat it expensively. ${DISCLAIM}` };
+    return { text: `An index is just a fixed list of companies. The Nifty 50 is India’s fifty largest listed companies. An index fund buys that whole list and nothing else.\n\nSo you get the average result of those fifty companies, minus a very small fee. No fund manager picking winners, no one to blame, no one to pay much.\n\nThe honest catch: you will never beat the market with it, because you are the market. For most people starting out, matching the market cheaply beats trying to beat it expensively. ${DISCLAIM}` };
   }
 
   if (has(q, 'mutual fund') && has(q, 'stock', 'difference', 'vs')) {
-    return { text: `A stock is one company. A mutual fund is a basket of many, run by a manager you pay a fee to.\n\nWith a stock you are making a judgement about that one business — if you are right you do very well, if you are wrong there is nothing to cushion it. With a fund, one company getting it wrong is diluted by the other forty-nine.\n\nStocks ask you to have a view. Funds let you not have one. Neither is better; they are different amounts of homework. ${DISCLAIM}` };
+    return { text: `A stock is one company. A mutual fund is a basket of many, run by a manager you pay a fee to.\n\nWith a stock you are making a judgement about that one business. If you are right you do very well, if you are wrong there is nothing to cushion it. With a fund, one company getting it wrong is diluted by the other forty-nine.\n\nStocks ask you to have a view. Funds let you not have one. Neither is better; they are different amounts of homework. ${DISCLAIM}` };
   }
 
   if (has(q, 'sip', 'every month', 'monthly invest')) {
-    return { text: `An SIP is a fixed amount invested on the same date every month, automatically.\n\nThe point is not returns. The point is that it removes the decision. You are not deciding whether today is a good day to invest — you decided once, and the rest happens without you. In a falling market it quietly buys more units at lower prices; in a rising one, fewer.\n\nFor someone with a monthly salary, it matches how your money actually arrives. ₹500 a month that you never think about beats ₹6,000 a year that you keep postponing. ${DISCLAIM}` };
+    return { text: `An SIP is a fixed amount invested on the same date every month, automatically.\n\nThe point is not returns. The point is that it removes the decision. You are not deciding whether today is a good day to invest. You decided once, and the rest happens without you. In a falling market it quietly buys more units at lower prices; in a rising one, fewer.\n\nFor someone with a monthly salary, it matches how your money actually arrives. ₹500 a month that you never think about beats ₹6,000 a year that you keep postponing. ${DISCLAIM}` };
   }
 
   if (has(q, 'time horizon', 'how long', 'long term', 'horizon')) {
-    return { text: `Your horizon decides which risks you can afford to take.\n\nOver a few months, the Indian market can do almost anything — it fell 38% in five weeks in 2020. Over ten years, the range of outcomes narrows a lot, because short-term swings average out and company earnings start to dominate.\n\nSo money you need next year does not belong in equity, however good the investment is. Money you will not touch for a decade can sit through falls that would be unbearable on a one-year view. Same investment, different risk, purely because of time. ${DISCLAIM}` };
+    return { text: `Your horizon decides which risks you can afford to take.\n\nOver a few months, the Indian market can do almost anything. It fell 38% in five weeks in 2020. Over ten years, the range of outcomes narrows a lot, because short-term swings average out and company earnings start to dominate.\n\nSo money you need next year does not belong in equity, however good the investment is. Money you will not touch for a decade can sit through falls that would be unbearable on a one-year view. Same investment, different risk, purely because of time. ${DISCLAIM}` };
   }
 
   if (has(q, 'how much should i invest', 'how much to invest', 'first salary', 'paycheck', 'how much of my salary')) {
@@ -104,7 +104,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   }
 
   if (has(q, 'volatil', 'why does the price', 'why do prices')) {
-    return { text: `Prices move because people change their mind about what something is worth — on earnings, on interest rates, on news, and quite often on mood.\n\nVolatility is just how much that moving around happens. A high-volatility holding is not a worse investment, it is a louder one. The mistake beginners make is treating every move as information. Most daily moves are noise, and the main cost of watching them is that noise eventually provokes a decision. ${DISCLAIM}` };
+    return { text: `Prices move because people change their mind about what something is worth: on earnings, on interest rates, on news, and quite often on mood.\n\nVolatility is just how much that moving around happens. A high-volatility holding is not a worse investment, it is a louder one. The mistake beginners make is treating every move as information. Most daily moves are noise, and the main cost of watching them is that noise eventually provokes a decision. ${DISCLAIM}` };
   }
 
   if (has(q, 'my dna', 'my score', 'investor dna', 'how am i doing')) {
@@ -115,7 +115,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
   }
 
   if (has(q, 'gold')) {
-    return { text: `Gold is the thing people buy when they stop trusting everything else, which is why it often rises when equity falls.\n\nThat makes it useful as a counterweight in a portfolio. The catch is that gold produces nothing — no earnings, no dividend, no interest. Its price only moves on what the next person will pay. Over very long periods it has roughly kept pace with inflation, not much more. ${DISCLAIM}` };
+    return { text: `Gold is the thing people buy when they stop trusting everything else, which is why it often rises when equity falls.\n\nThat makes it useful as a counterweight in a portfolio. The catch is that gold produces nothing: no earnings, no dividend, no interest. Its price only moves on what the next person will pay. Over very long periods it has roughly kept pace with inflation, not much more. ${DISCLAIM}` };
   }
 
   if (has(q, 'what is practice mode', 'what is this', 'how does this work')) {
@@ -124,7 +124,7 @@ export function respond(input: string, s: GameState, snap: Snapshot): CoachReply
 
   return {
     guard: 'off-topic',
-    text: `I’m a learning companion for a practice investing account, so I’m limited to how investing works and what your practice portfolio is doing — I can’t help with much beyond that.\n\nThings I can actually explain: what an index fund is, why your portfolio moved, what diversification buys you, why your horizon changes the risk, or what your Investor DNA score means. ${DISCLAIM}`,
+    text: `I’m a learning companion for a practice investing account, so I’m limited to how investing works and what your practice portfolio is doing. I can’t help with much beyond that.\n\nThings I can actually explain: what an index fund is, why your portfolio moved, what diversification buys you, why your horizon changes the risk, or what your Investor DNA score means. ${DISCLAIM}`,
   };
 }
 

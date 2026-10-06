@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ArrowRight, Banknote, Brain, Compass, FastForward, GraduationCap, Info, TrendingDown, TrendingUp } from 'lucide-react';
+import { ArrowRight, Banknote, Brain, Compass, FastForward, GraduationCap, TrendingDown, TrendingUp } from 'lucide-react';
 import { byId } from '@/data/instruments';
 import { getMarketPath, dayLabel, TRADING_DAYS } from '@/lib/market';
 import { overall, traits, grade, type Snapshot } from '@/lib/dna';
@@ -107,7 +107,7 @@ export function Home({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }) {
             </div>
             <b style={{ fontSize: 17, color: 'var(--ink)', fontWeight: 700, letterSpacing: '-0.02em', display: 'block', marginBottom: 4 }}>{g.label}</b>
             <span className="tiny">
-              Scored on how you decide &mdash; <J t="diversification">spread</J>, patience, composure, conviction.
+              Scored on how you decide: <J t="diversification">spread</J>, patience, composure, conviction.
               Not on what you made.
             </span>
           </div>
@@ -131,7 +131,7 @@ export function Home({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }) {
         </button>
         {s.lots.length === 0 && (
           <p className="tiny" style={{ textAlign: 'center', marginTop: 9 }}>
-            Invest something first &mdash; there is nothing to fast-forward through yet.
+            Invest something first. There is nothing to fast-forward through yet.
           </p>
         )}
       </div>
@@ -195,13 +195,9 @@ export function Home({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }) {
         </div>
       </button>
 
-      <div className="row top" style={{ gap: 7, marginTop: 18 }}>
-        <Info size={13} color="var(--ink-4)" style={{ flex: 'none', marginTop: 2 }} />
-        <p className="tiny">
-          Everything on this screen is simulated. Prices are modelled, not live. Nothing here is
-          investment advice, and no real transaction can be made from Practice Mode.
-        </p>
-      </div>
+      <p className="tiny" style={{ marginTop: 18 }}>
+        Prices are modelled, not live. Nothing here is investment advice.
+      </p>
     </div>
   );
 }

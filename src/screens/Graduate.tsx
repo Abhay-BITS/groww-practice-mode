@@ -101,7 +101,7 @@ export function Graduate({ snap }: { snap: Snapshot }) {
             </div>
             <p className="sub" style={{ fontSize: 13 }}>
               We will use the fund allocation you built with fake rupees as the starting point for a real
-              monthly SIP. Individual stocks are not carried over &mdash; a first real investment should not
+              monthly SIP. Individual stocks are not carried over, because a first real investment should not
               depend on one company.
             </p>
           </div>

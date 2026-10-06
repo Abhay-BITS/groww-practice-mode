@@ -54,7 +54,7 @@ export const REGIMES: Regime[] = [
 
 export const TRADING_DAYS = 250;
 
-/** mulberry32 — small, fast, and reproducible across browsers. */
+/** mulberry32: small, fast, and reproducible across browsers. */
 function rng(seed: number) {
   let a = seed >>> 0;
   return () => {

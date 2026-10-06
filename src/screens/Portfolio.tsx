@@ -133,7 +133,7 @@ function HoldingSheet({ pos, onClose }: { pos: Position; onClose: () => void }) 
               You said you would hold this for {h.label.toLowerCase()}
             </b>
             <p className="sub" style={{ fontSize: 13, color: '#7a5206' }}>
-              It has been {held} trading days. Selling now is allowed &mdash; we are not going to stop you.
+              It has been {held} trading days. Selling now is allowed. We are not going to stop you.
               It will show up in your Patience score, and in your replay at the end of the year.
             </p>
           </div>
@@ -186,7 +186,7 @@ function HoldingSheet({ pos, onClose }: { pos: Position; onClose: () => void }) 
       <div className="card flat" style={{ marginBottom: 18 }}>
         <p className="sub" style={{ fontSize: 13 }}>
           {early
-            ? `Between now and the end of your horizon, this position will move around a lot. Those moves are not new information about ${inst.name} — they are the price of the horizon you chose.`
+            ? `Between now and the end of your horizon, this position will move around a lot. Those moves are not new information about ${inst.name}. They are the price of the horizon you chose.`
             : `Your horizon is up. This is the moment to ask whether the reason you wrote down still holds, rather than whether the price went your way.`}
         </p>
       </div>

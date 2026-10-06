@@ -145,7 +145,7 @@ export function PanicModal() {
         </div>
         <p className="sub" style={{ marginBottom: 6 }}>
           This is the decision that separates investors who keep their returns from investors who do not.
-          There is no right answer here, only your answer &mdash; and we are recording it.
+          There is no right answer here, only your answer, and we are recording it.
         </p>
         <p className="tiny" style={{ marginBottom: 18 }}>You have been looking at this for {elapsed}s. Take your time. Really.</p>
 
@@ -158,7 +158,7 @@ export function PanicModal() {
           <button className="btn ghost" onClick={() => answerPanic('buy')}>Buy more while it is cheaper</button>
         </div>
         <p className="tiny" style={{ marginTop: 14, textAlign: 'center' }}>
-          Simulated event. No real money is affected, and this is not a recommendation to do any of these things.
+          Simulated event. Not a recommendation.
         </p>
       </div>
     </div>

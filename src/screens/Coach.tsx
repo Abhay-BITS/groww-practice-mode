@@ -20,7 +20,7 @@ export function Coach({ snap }: { snap: Snapshot }) {
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: 'ai',
-      text: 'I explain how investing works and what your practice portfolio is doing. I will not pick investments for you, predict prices, or promise returns — not because I am being careful, but because nobody can do those things honestly.',
+      text: 'I explain how investing works and what your practice portfolio is doing. I will not pick investments for you, predict prices, or promise returns. Not because I am being careful, but because nobody can do those things honestly.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -48,8 +48,8 @@ export function Coach({ snap }: { snap: Snapshot }) {
         <div className="row top" style={{ gap: 9 }}>
           <ShieldCheck size={15} color="var(--blue)" style={{ flex: 'none', marginTop: 1 }} />
           <p className="tiny" style={{ color: '#3a44a8' }}>
-            Four hard limits: no recommendations, no predictions, no guarantees, no buy or sell instructions.
-            When one of them fires, we show you which, rather than hiding the refusal in polite language.
+            Four hard limits: no recommendations, no predictions, no guarantees, no buy or sell
+            instructions. When one fires, we show you which.
           </p>
         </div>
       </div>

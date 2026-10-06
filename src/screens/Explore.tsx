@@ -33,16 +33,6 @@ export function Explore({ snap }: { snap: Snapshot }) {
         ))}
       </div>
 
-      <div className="card tint-amber" style={{ marginBottom: 14, padding: 12 }}>
-        <div className="row top" style={{ gap: 9 }}>
-          <AlertTriangle size={15} color="#9a6508" style={{ flex: 'none', marginTop: 1 }} />
-          <p className="tiny" style={{ color: '#7a5206' }}>
-            Prices here are simulated, not live. We show every instrument with its catch next to it,
-            because the catch is the part beginners are never shown.
-          </p>
-        </div>
-      </div>
-
       <div>
         {list.map((inst) => {
           const price = priceOn(s.regime, inst.id, s.day);
@@ -133,9 +123,7 @@ function DetailSheet({ inst, onClose, onBuy }: { inst: Instrument; onClose: () =
       </div>
 
       <button className="btn" onClick={onBuy}>Practice invest</button>
-      <p className="tiny" style={{ textAlign: 'center', marginTop: 10 }}>
-        Fake rupees. This is not an order and cannot become one.
-      </p>
+      <p className="tiny" style={{ textAlign: 'center', marginTop: 10 }}>Fake rupees. Not a real order.</p>
     </Sheet>
   );
 }
@@ -192,7 +180,7 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
       <Sheet title="Why this one?" onClose={onClose}>
         <p className="sub" style={{ marginBottom: 14 }}>
           Pick the honest answer, not the impressive one. Nothing here is blocked and nothing is judged
-          now &mdash; but we will show it back to you when the outcome arrives.
+          now. We will show it back to you when the outcome arrives.
         </p>
         <div className="stack sm" style={{ marginBottom: 20 }}>
           {REASONS.map((r) => (
@@ -262,9 +250,6 @@ function InvestSheet({ inst, available, onClose }: { inst: Instrument; available
       <button className="btn" disabled={!value || tooMuch} onClick={() => setStage('why')}>
         Next: why this one? <ArrowRight size={17} />
       </button>
-      <p className="tiny" style={{ textAlign: 'center', marginTop: 10 }}>
-        Practice Mode cannot place a real order. No money leaves any account.
-      </p>
     </Sheet>
   );
 }

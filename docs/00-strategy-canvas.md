@@ -1,4 +1,4 @@
-# Strategy canvas — the argument behind the build
+# Strategy canvas: the argument behind the build
 
 Supporting material for the 1-pager. This is the reasoning; the 1-pager is the summary.
 
@@ -17,7 +17,7 @@ Four forces that only recently pointed the same way:
 
 > Directional claims, drawn from the public commentary around SEBI's 2024–25 advisory
 > restrictions, NSE demat growth disclosures and reported platform ARPU comparisons. They should be
-> replaced with internal figures before anyone acts on them — they are included to show which
+> replaced with internal figures before anyone acts on them. They are included to show which
 > numbers the argument depends on, not to assert precision I do not have.
 
 ---
@@ -69,7 +69,7 @@ activated Gen Z user is a twenty-year annuity at near-zero incremental CAC. Prac
 activation product; the SIP carry-over is where it pays back.
 
 ### Competitor lens
-Paper trading is a commodity — most brokers and several global apps have it. **The differentiator
+Paper trading is a commodity, most brokers and several global apps have it. **The differentiator
 cannot be the simulation.** It has to be the record the simulation keeps about you, and the fact
 that practice ends. Nobody currently captures decision rationale at the point of trade, and nobody
 scores a practice account on anything other than returns.
@@ -82,7 +82,7 @@ other constraint:
 | --- | --- |
 | Simulated results read as projections | Persistent badge on every simulated figure; "modelled market", never "historical" |
 | Behavioural scoring reads as advice | Traits describe consequences, never instructions; no trait suggests a trade |
-| The panic screen reads as a recommendation | All three options have identical visual weight — deliberately, and it was a bug once |
+| The panic screen reads as a recommendation | All three options have identical visual weight: deliberately, and it was a bug once |
 | The coach drifts into advice | Six ordered guardrails, refusals evaluated before helpfulness, the triggered guardrail shown in the UI |
 | Carry-over pushes a beginner into a single stock | Individual stocks excluded from the SIP carry-over, whatever the practice portfolio holds |
 
@@ -95,7 +95,7 @@ other constraint:
 | Better educational content | Attacks a solved problem. The cohort is informed and still not invested. |
 | Plain paper trading with virtual money | Scored on returns, it teaches concentration. Over short windows variance beats skill, so the most reckless user wins and learns the wrong lesson. |
 | Gamified streaks and leaderboards | Optimises engagement, and the metric people compete on becomes returns. That makes the core problem worse. |
-| A "safe starter portfolio" recommendation | Crosses the advice line, and teaches nothing — the user ends up invested without understanding why. |
+| A "safe starter portfolio" recommendation | Crosses the advice line, and teaches nothing: the user ends up invested without understanding why. |
 | Lowering the minimum to ₹10 | Removes a *financial* barrier when the barrier is psychological. ₹10 of real money still requires the decision. |
 
 ---
@@ -114,8 +114,8 @@ other constraint:
 
 **Counter-metrics, watched for harm:**
 
-- Users who stay in Practice Mode past 30 days without graduating — the feature has become a toy
-- Average concentration of graduated real portfolios — if it rises, Practice Mode is teaching the
+- Users who stay in Practice Mode past 30 days without graduating, meaning the feature has become a toy
+- Average concentration of graduated real portfolios, if it rises, Practice Mode is teaching the
   wrong thing and should be rolled back
 - Support contacts asking whether practice money is real
 
@@ -135,7 +135,7 @@ Stated plainly, because the honest version is more useful than the confident one
    authentically. The deliberation-time capture partly detects this; a second, unannounced drawdown
    would test it better.
 3. **Reason tags may be performed rather than honest.** Mitigated by making capture explicitly
-   non-judgemental, and monitored by the reason-distribution metric — heavy clustering on the
+   non-judgemental, and monitored by the reason-distribution metric, heavy clustering on the
    "good" tags means users are gaming it and the replay loses its teeth.
 4. **Four traits is a model, not a truth.** The weights are reasoned, not fitted. They should be
    calibrated against which practice behaviours actually predict 90-day retention, once there is
@@ -145,9 +145,9 @@ Stated plainly, because the honest version is more useful than the confident one
 
 ## 7. What I would build next
 
-1. **Historical replay mode** — real NIFTY paths rather than modelled ones. More defensible, and
+1. **Historical replay mode**, real NIFTY paths rather than modelled ones. More defensible, and
    lets the app say "this is what actually happened in March 2020."
-2. **A second, unannounced drawdown** — tests whether composure was learned or performed.
-3. **Squad comparison on behaviour, not returns** — "your Composure is higher than 70% of people
+2. **A second, unannounced drawdown**, tests whether composure was learned or performed.
+3. **Squad comparison on behaviour, not returns**. "your Composure is higher than 70% of people
    who started the same month." Social pressure pointed at the right variable.
 4. **Calibrate the DNA weights** against real 90-day retention, replacing reasoning with fitting.

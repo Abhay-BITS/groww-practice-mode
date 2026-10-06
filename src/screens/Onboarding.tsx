@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Option } from '@/components/ui';
 import { useStore } from '@/state/store';
 import type { Profile } from '@/lib/types';
@@ -51,45 +51,45 @@ export function Onboarding() {
 
   if (step === -1) {
     return (
-      <div className="pad" style={{ paddingTop: 28 }}>
-        <div style={{ width: 54, height: 54, borderRadius: 17, background: 'var(--green-soft)', display: 'grid', placeItems: 'center', marginBottom: 20 }}>
-          <Sparkles size={26} color="var(--green-dark)" />
-        </div>
-        <h1 className="h-screen" style={{ fontSize: 28, marginBottom: 12 }}>
-          Make your first ten investing mistakes with money that isn&rsquo;t real.
-        </h1>
-        <p className="sub" style={{ fontSize: 14.5, marginBottom: 22 }}>
-          Practice Mode gives you &#8377;1,00,000 in fake rupees and a market that behaves like the real one.
-          Over fourteen short sessions you will buy, panic, hold, and find out what kind of investor you
-          actually are &mdash; before any of it costs you.
-        </p>
+      <div className="intro">
+        <div className="intro-scroll">
+          <div className="brandmark">
+            <img src="/groww-logo.png" alt="Groww" width={44} height={44} />
+            <span>Practice Mode</span>
+          </div>
 
-        <div className="card flat" style={{ marginBottom: 14 }}>
+          <h1 className="h-screen" style={{ fontSize: 27, marginBottom: 12 }}>
+            Make your first ten investing mistakes with money that isn&rsquo;t real.
+          </h1>
+          <p className="sub" style={{ fontSize: 14.5, marginBottom: 20 }}>
+            You get &#8377;1,00,000 in fake rupees and a market that behaves like the real one.
+            Over fourteen short sessions you will buy, panic, hold, and find out what kind of
+            investor you actually are, before any of it costs you.
+          </p>
+
           <div className="stack sm">
             {[
               ['We score how you decide, not how much you made.', 'A lucky bet on one stock scores badly here.'],
               ['Every decision asks you why, and remembers the answer.', 'Later, we show you what you said against what you did.'],
               ['The market will fall while you are holding.', 'That is the point. It is the only part you cannot read about.'],
-            ].map(([t, s]) => (
-              <div key={t}>
-                <b style={{ fontSize: 13.5, color: 'var(--ink)', fontWeight: 600 }}>{t}</b>
-                <div className="tiny">{s}</div>
+            ].map(([t, d]) => (
+              <div className="card flat" key={t} style={{ padding: 13 }}>
+                <b style={{ fontSize: 13.5, color: 'var(--ink)', fontWeight: 650, display: 'block', marginBottom: 3 }}>{t}</b>
+                <span className="tiny">{d}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="row top" style={{ gap: 8, marginBottom: 20 }}>
-          <ShieldCheck size={15} color="var(--ink-4)" style={{ flex: 'none', marginTop: 1 }} />
-          <p className="tiny">
-            No real money, no bank account, no KYC. Nothing here can be bought or sold for real,
-            and nothing here is advice.
+        {/* Pinned, so the way in is visible whatever the screen height or zoom level. */}
+        <div className="intro-cta">
+          <button className="btn" onClick={() => setStep(0)}>
+            Set up in 30 seconds <ArrowRight size={17} />
+          </button>
+          <p className="tiny" style={{ textAlign: 'center', marginTop: 8 }}>
+            Simulated account. No real money is involved.
           </p>
         </div>
-
-        <button className="btn" onClick={() => setStep(0)}>
-          Set up in 30 seconds <ArrowRight size={17} />
-        </button>
       </div>
     );
   }

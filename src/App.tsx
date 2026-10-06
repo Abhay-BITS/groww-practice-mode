@@ -64,7 +64,7 @@ function Shell() {
       </div>
 
       {!s.started ? (
-        <div className="viewport"><Onboarding /></div>
+        <div className="viewport" style={{ overflow: 'hidden' }}><Onboarding /></div>
       ) : (
         <>
           <AppBar
@@ -121,7 +121,7 @@ export default function App() {
       <div className="stage">
         <div className="pitch">
           <div className="pitch-logo">
-            <img src="/image.png" alt="" />
+            <img src="/groww-logo.png" alt="" />
             <span>Groww</span>
             <em>Practice Mode</em>
           </div>
@@ -143,9 +143,8 @@ export default function App() {
             ))}
           </div>
           <p className="pitch-foot">
-            Concept prototype for the Groww Product Internship assignment. Not affiliated with or endorsed
-            by Groww. All prices, portfolios and market movements are simulated. Nothing here is investment
-            advice, and no real transaction is possible.
+            Concept prototype for the Groww Product Internship assignment. Not affiliated with Groww.
+            All prices and portfolios are simulated, and nothing here is investment advice.
           </p>
         </div>
         <Shell />

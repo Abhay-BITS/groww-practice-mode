@@ -87,8 +87,9 @@ a { color: inherit; text-decoration: none; }
    -------------------------------------------------------------------------- */
 .phone {
   width: var(--phone-w);
-  height: var(--phone-h);
-  max-height: calc(100vh - 96px);
+  /* Never taller than the window. Browser zoom shrinks the CSS viewport, so this
+     is also what keeps the app usable at 150% and 200%. */
+  height: min(var(--phone-h), calc(100dvh - 40px));
   background: var(--bg);
   border-radius: 44px;
   border: 10px solid #15161a;
@@ -286,20 +287,46 @@ a { color: inherit; text-decoration: none; }
    Responsive: below 1100px the pitch stacks above; on a real phone the frame
    disappears entirely and the app goes full bleed.
    -------------------------------------------------------------------------- */
-@media (max-width: 1100px) {
-  .stage { grid-template-columns: minmax(0, var(--phone-w)); gap: 36px; padding: 32px 20px 48px; }
-  .pitch { justify-self: center; max-width: var(--phone-w); }
-  .pitch h1 { font-size: 32px; }
+/* Not enough room for both? Show the product, not the pitch. The marketing panel
+   is supporting material; the phone is the thing being evaluated. */
+@media (max-width: 1100px), (max-height: 780px) {
+  .stage { grid-template-columns: minmax(0, var(--phone-w)); gap: 0; padding: 16px; }
+  .pitch { display: none; }
 }
 @media (max-width: 460px) {
   body { background: var(--bg); }
   .stage { padding: 0; gap: 0; grid-template-columns: 1fr; }
-  .pitch { display: none; }
-  .phone { width: 100%; height: 100dvh; max-height: 100dvh; border: none; border-radius: 0; box-shadow: none; }
+  .phone { width: 100%; height: 100dvh; border: none; border-radius: 0; box-shadow: none; }
   .notch, .statusbar { display: none; }
   .tabbar { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
 }
 
+/* Very short windows: reclaim the chrome the phone frame spends on decoration. */
+@media (max-height: 620px) {
+  .phone { border-width: 6px; border-radius: 28px; }
+  .notch, .statusbar { display: none; }
+  .intro-scroll { padding-top: 14px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* --------------------------------------------------------------------------
+   Onboarding intro. The content scrolls, the call to action does not, so the
+   way in stays on screen at any window height or browser zoom level.
+   -------------------------------------------------------------------------- */
+.intro { display: flex; flex-direction: column; height: 100%; }
+.intro-scroll { flex: 1; overflow-y: auto; padding: 20px 16px 12px; }
+.intro-scroll::-webkit-scrollbar { width: 0; }
+.intro-cta {
+  flex: none; padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line-2); background: var(--bg);
+}
+
+.brandmark { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+.brandmark img { display: block; }
+.brandmark span {
+  font-size: 12.5px; font-weight: 650; color: var(--green-dark); background: var(--green-soft);
+  padding: 5px 11px; border-radius: 99px; letter-spacing: -0.01em;
 }
