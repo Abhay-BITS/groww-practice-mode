@@ -126,7 +126,7 @@ export default function App() {
           <h1>A practice account that grades the <b>decision</b>, not the result.</h1>
           <p>
             For 20 to 26 year olds making their first investment. ₹1,00,000 of practice money, a year
-            of market in about ten minutes, and a score that leaves profit out on purpose.
+            of market in under a minute, and a score that leaves profit out on purpose.
           </p>
           <div className="pitch-points">
             {POINTS.map(([t, d], i) => (

@@ -1,218 +1,79 @@
-# Artifact 2. Prompt log
+# Prompt log
 
-How the prototype was actually built. Each prompt is reproduced as it was sent, followed by
-what came back and what had to be corrected. The corrections are the useful part: they are
-where product judgement had to override what the model produced.
+How Groww Practice Mode was built, in the order it happened.
 
----
+**Version 1** was built in Bolt from seven prompts and submitted in September. Those prompts are summarised at the end.
 
-## Prompt 1. Frame the problem before writing any code
+**Version 2** is this one. It was rebuilt with Claude Code over about a day, starting from the version 1 code and documents. Below are the prompts I actually gave, in order. I dictated most of them, so I've taken out filler words and repetition, but I haven't changed what I asked for. After each one: what came back, and what I did with it.
 
-> I am designing a feature inside the Groww app for first-time investors aged 20–26 in India.
-> Before we build anything, argue the opposite of the obvious solution.
->
-> The obvious solution is a paper-trading simulator with virtual money. Tell me why that fails
-> for this segment. Specifically: what does a beginner learn from paper trading that they could
-> not have learned by reading, and what do they fail to learn? Be concrete and do not hedge.
+## Round 1: the rebuild brief
 
-**What came back:** three failure modes that shaped the entire product , 
+> I've already submitted this assignment, but I want the version I'd have made with another 24 hours. Go through the problem statement, my case study, my prompt log, my evals and my project code. I've also attached another candidate's submission. Tell me how you'd solve it, use my Practice Mode idea, give me ideas we can actually build, then build them. Make it look like Groww, and push it to my GitHub so I can host it on Vercel.
 
-1. Paper trading teaches instrument mechanics (how to place an order), which is not the blocker.
-   The blocker is the decision, not the interface.
-2. Without real money at stake there is no emotional load, so the one thing a simulator could
-   uniquely teach, how you behave in a drawdown, is exactly what it fails to teach.
-3. Virtual portfolios reward whoever took the most concentrated bet, because over a short window
-   variance dominates. A simulator that scores returns actively teaches beginners to gamble.
+**What came back.** A comparison of the two submissions. The other candidate's argument was stronger than mine. They segmented their users, cited data and set success metrics, and I'd done none of those. My prototype was stronger than theirs. The sharpest point was that we'd both built a virtual-money simulator, and that on its own is something any broker can copy. The suggestion was to make the record of decisions the core instead: why people bought, what they did in a fall, and whether they stuck to their plan.
 
-**What I did with it:** point 3 became the central design constraint. The product does not score
-returns at all. Points 1 and 2 became the Decision Journal and the Panic Moment.
+It proposed six pieces: a decision journal, a behaviour score, a fast-forward year, a scripted crash, a replay, and a route out to a real SIP. Then it asked me three questions before writing any code. After that it built the prototype and wrote first drafts of this log, the evals and a strategy note.
 
----
+**What I decided.**
 
-## Prompt 2. Pressure-test the differentiator
+| Question | My answer | Why |
+| --- | --- | --- |
+| How much to build | All six | They only make sense together. The replay needs the journal, and the score needs the crash. |
+| Desktop page or phone app | A phone app in Groww's style | Groww is a phone app. A desktop demo would have looked like a third-party tool. |
+| Who writes the case study | Me, from an outline | The brief says it shouldn't be AI-written. I changed this in Round 2. |
 
-> My wedge is this: the simulator records *why* the user made each decision: a reason tag and a
-> time horizon captured at the moment of purchase, and replays it against what they actually did.
->
-> Attack this idea. Where does it break? Where will users lie, skip, or game it? What is the
-> smallest version that still works?
+## Round 2: the documents
 
-**What came back:** the useful objections , 
+> I've already submitted, so you can write the documents too.
 
-- Users will pick whichever reason sounds best unless the flow is explicitly non-judgemental at
-  capture time. → The reason picker shows no scoring, no warnings and no "good/bad" signal.
-  Judgement is deferred entirely to the replay, after the outcome is known.
-- A reason tag with no consequence is a dead field. → The horizon became a commitment: selling
-  before it elapses is recorded as a broken promise and costs Patience points.
-- Six reason options is near the limit before the list becomes a survey. → Capped at six.
+This produced the case study draft. I'm noting it because it's true, and because Round 4 found real problems in the drafts from Rounds 1 and 2.
 
----
+## Round 3: what I didn't like when I opened it
 
-## Prompt 3. Build the market engine
+> The Groww logo is used badly and isn't placed well, and there's no logo inside the phone at all. When I opened the site it was already zoomed in, so I couldn't find the button and got confused. The phone needs to look right even when the screen is zoomed in. There's a sparkle emoji on the first screen, which isn't good. Use the Groww logo instead. There are em dashes everywhere. And there's too much small print: "no real money, no bank account, no KYC, nothing here is advice" on every screen.
 
-> Write a deterministic market simulation in TypeScript for an investing-practice app.
->
-> Requirements:
-> - Three selectable year-long regimes: a crash-and-recover year, a sideways year, a steady bull year.
-> - 250 trading days. Seeded PRNG so every user sees an identical path, because the scores must be comparable.
-> - Nine instruments, each with a beta to the index and its own idiosyncratic volatility.
-> - Each regime must finish within 2% of its stated annual return, or the label on it is a lie.
-> - Expose the first day the index is more than 12% below its running peak. That is where a
->   scripted "panic" event will fire.
->
-> No charting library. Pure functions, cached per regime.
+| What I saw | Cause | Change |
+| --- | --- | --- |
+| Logo in a white box | The image file had a solid white background | Cut out on a transparent circle, then used in the header, inside the app, and as the browser icon |
+| Couldn't find the button when zoomed in | Below 1100px wide, the side panel stacked above the phone and pushed it off screen. Zoom shrinks the page width, so zooming caused exactly that. | The phone can never be taller than the window, the side panel hides when there isn't room, and the button is pinned to the bottom. Checked at 100%, 150% and 200% zoom and on two phone sizes. |
+| Sparkle emoji | Placeholder icon | Groww logo |
+| Em dashes | The generated copy used them everywhere | Removed from the app and the documents |
+| Too much small print | The same disclaimer repeated on each screen | One short line per screen |
 
-**What came back:** a working mulberry32 + Box-Muller implementation.
+All five were things I noticed just by using it, and none of them were in the tests.
 
-**What was wrong:** the endpoint constraint was ignored. A random walk wanders: the "sideways
-year" finished at **−20%** and the "steady bull year" at **+17.7%** against a stated +27%. A
-regime called "the sideways year" that loses a fifth of your money teaches the wrong lesson.
+## Round 4: critique everything again
 
-**The fix I specified:**
+> Check the whole prototype and process again. Critique it yourself, and make any design or text changes you think are needed. Everything should be presentable. None of it should read like it was written by AI.
 
-> After generating the path including the shock, pin the endpoint. Compute realised log return,
-> compare to target, and distribute the correction evenly across all days in log space. The crash
-> must still crash, only where the year *ends* should change.
+This was the most useful round. Claude went through every screen and state on a phone-sized browser, rather than only reading the code. These are the problems that came out of it:
 
-Result: crash year now −35.9% peak-to-trough, finishing +8.5%. That is the 2020 story, which is
-the whole point of including it.
+| Problem | Why it mattered | Fix |
+| --- | --- | --- |
+| In the 2020 crash, Tata Motors (the riskiest stock) fell 3.8%, but the balanced fund fell 16% | It teaches the opposite of what's true. Random noise was swamping the market's effect. | Each price now follows the market by its sensitivity, plus a small wobble that pulls back towards it. Each year's expected pattern (risky stocks fall furthest, gold holds up in 2020) is now a test. |
+| The price on the detail sheet didn't match the list on day one | First impressions look broken | Three months of price history before day one, so both read from the same point |
+| A ₹100 SIP was split into three ₹33 SIPs | Funds don't accept ₹33. A Groww PM would spot it straight away. | At least ₹100 per fund. Smaller funds drop out, and the app says why. |
+| Selling everything at the crash still ticked "held through a fall" | The graduation check could be passed by doing the wrong thing | Fixed, with a test so it can't come back |
+| Onboarding asked about goals and never used the answer | The screen promised "we'll measure you against this" | Dropped the question. The other answer, what has stopped you so far, now changes the crash alert and the end-of-year summary. |
+| "Fourteen sessions" was promised but never built | Untrue copy | Removed |
+| The salary card on Home went nowhere | A dead end in the main screen | Now a real split of your salary, and its "invest" amount becomes the suggested SIP |
+| The coach handled 12 of its 14 test prompts, but only 4 of 16 reworded ones | It had been written to pass its own test questions | Rewritten. Details and the honest holdout score are in the evals. |
+| Browser pop-up dialogs, two unlabelled icons in the header, emoji in the reasons | Each one made it look like a demo, not an app | In-app dialogs, a labelled "DNA" score chip, plain text |
 
----
+It also found that the earlier drafts of this log and the evals overstated things. The log described the build as neat question-and-answer exchanges, and the evals marked six coach prompts as passing that had never been run. Both documents have been rewritten, so every result in them is one that was actually measured.
 
-## Prompt 4. Score judgement instead of returns
+## What I'd do differently
 
-> Design a four-trait behavioural score for a practice investor. Hard constraint: **profit must not
-> appear in any formula.** A user who put everything into one stock and got lucky must score badly.
->
-> Derive each trait only from recorded behaviour:
-> - Spread, concentration of the portfolio
-> - Patience, exits measured against the horizon stated at purchase
-> - Composure: the choice made during the scripted drawdown
-> - Conviction, quality of recorded reasons, weighted by rupees committed
->
-> For each trait return the score, the evidence in the user's own data, and one nudge. The nudge
-> describes a consequence. It never issues an instruction and never calls the user good or bad.
+I'd write the coach's test prompts before building the coach, and keep some back that the builder never sees. Both kinds of coach failure above came from testing against the same questions it was written for.
 
-**What came back:** a sound structure. Herfindahl for concentration, rupee-weighted reason quality
-for conviction.
+And I'd use it myself on a phone before reading any code. Everything in Round 3 was obvious the moment I opened it.
 
-**What was wrong:** the Spread formula saturated, any four-holding portfolio scored 100, so the
-trait stopped discriminating almost immediately.
+## Version 1 prompts (Bolt, September)
 
-**The fix:** recalibrated to `(1 − HHI) × 95 + categories × 5`, so a sensible four-way split lands
-in the high eighties. The score stays reachable without ever being finished.
-
-**Verified by test:** a concentrated lucky gambler scores **31**; a diversified patient holder
-scores **94**, on the same market path, with the gambler ahead on money.
-
----
-
-## Prompt 5. The Panic Moment
-
-> Add an interrupt to the fast-forward. When the index first crosses a 12% drawdown, stop the clock
-> and block the app with a full-screen decision: sell everything, hold, or buy more.
->
-> Record the choice *and the time taken to make it*, because a decision made in under four seconds is a
-> reflex, not a decision, and should score differently.
->
-> Critical: the three options must carry identical visual weight. Styling one as the primary action
-> turns this screen into investment advice.
-
-**What came back:** the modal, the timer, and the deliberation-time capture.
-
-**What was wrong:** it shipped "Buy more while it is cheaper" as the green primary button and
-"Sell everything" as a muted outline. Visual hierarchy *is* a recommendation. Caught on review of
-the rendered screen, not in the code, all three are now identical ghost buttons.
-
----
-
-## Prompt 6. Guardrail the coach, refusals first
-
-> Write the response engine for a beginner investing coach. Ordered rules, refusals evaluated
-> **before** helpfulness, so a question that is both ("which fund should I buy, and what is an
-> index fund?") refuses the recommendation.
->
-> Five hard refusals: prompt injection, guaranteed returns, price prediction, personalised
-> buy/sell recommendation, buy/sell instruction during a fall.
->
-> A refusal must not be a dead end. Each one replaces the thing it will not do with the questions
-> a person should actually be asking. Surface which guardrail fired in the UI, show the refusal
-> rather than hiding it in polite language.
-
-**What came back:** the ordered matcher and the refusal copy.
-
-**What I changed:** the first draft of the guarantee refusal opened with "I understand you're
-looking for certainty…". Padding before a refusal reads as a soft yes. Rewritten to open on the
-word **No.**
-
----
-
-## Prompt 7. Make it look like Groww, not like a demo wearing Groww's colours
-
-> Rebuild the UI as a mobile app rendered in a phone frame, using Groww's real tokens:
-> #00D09C primary, #5367FF secondary, #121212 / #44475B / #7C7E8C text ramp, #E9E9EB borders,
-> Inter throughout, tabular numerals on every currency figure.
->
-> Five-tab bottom navigation. Bottom sheets rather than pages for anything modal.
->
-> Below 460px the phone frame must disappear entirely and the app must go full-bleed, because this will
-> be opened on a phone by people reviewing it.
-
-**What came back:** the design system and the component layer.
-
-**What was wrong:** the mobile breakpoint was written but never verified, because screenshots taken
-through Chrome's `--window-size` do not actually set the layout viewport. Verified properly under
-real device emulation at 390×844: marketing pane hidden, **zero horizontal overflow on all seven
-tabs.**
-
----
-
-## Prompt 8. Adversarial review as a hostile reviewer
-
-> You are reviewing this as a Groww PM who has seen forty intern submissions and is looking for a
-> reason to reject this one. Where does it fall apart?
->
-> Then separately: you are a SEBI compliance officer. What in here would you refuse to ship?
-
-**What came back, and what I changed:**
-
-| Objection | Change made |
-| --- | --- |
-| "A fourteen-day practice account is a retention product, not an acquisition one: where is the exit?" | The Graduation Bridge became mandatory, with four behavioural gates and a real ₹100 SIP as the terminal state. Practice Mode is a programme with an end, not a sandbox. |
-| "Carrying a practice portfolio into real money could push a beginner into a single stock." | Individual stocks are excluded from the SIP carry-over. Funds only, regardless of what the practice portfolio holds. |
-| "Simulated results displayed in rupees look like projections." | Every currency figure in a simulated context carries a persistent badge, and the Time Machine is labelled a modelled market, not a historical replay. |
-| "The reviewer will open this and see an empty account, which hides every feature that needs history." | Added an explicit opt-in `?demo` seed and `?tab=` deep links. A real first-time user still starts empty. |
-
----
-
-## Prompt 9. Write the tests, not the claims
-
-> Write assertions for the simulation and scoring engine. Do not test that functions run, test the
-> product claims:
->
-> - Each regime finishes within 2% of its stated annual return.
-> - The crash regime draws down more than 25% and still recovers above its start.
-> - The calm regime never triggers a panic.
-> - Paths are byte-identical across runs.
-> - A diversified patient portfolio outscores a concentrated lucky one, **while losing to it on money.**
-> - Every guardrail fires on its canonical adversarial prompt.
-> - No response in any path promises a return.
-
-**Result:** 33 assertions, all passing. Two product bugs were found by these tests rather than by
-clicking: the regime endpoint drift, and the Spread trait saturating.
-
----
-
-## What the model was not allowed to decide
-
-Recorded deliberately, because it is the honest answer to "how much of this is yours":
-
-- **Not scoring returns.** The single most important decision in the product. Every draft that
-  included a returns-based score was rejected.
-- **Non-judgemental capture, deferred judgement.** Models consistently wanted to warn the user at
-  the moment they picked a weak reason. That destroys the mechanism, because the replay only teaches
-  because the user was allowed to be honest first.
-- **Equal visual weight on the panic options.** Caught on visual review.
-- **Excluding single stocks from the SIP carry-over.** A product-safety call, not a UX one.
-- **The 14-day programme with a terminal state.** Models default to open-ended engagement loops.
-  Practice Mode is designed to be left.
+1. Build "Groww Practice Mode" for 20 to 26 year old first-time investors: ₹1,00,000 of virtual money, with a learning layer around the simulation. Eleven screens, from landing to a bridge to real investing.
+2. Make the paper trading work: deduct cash, track holdings and allocation, stop over-investing, and allow a reset.
+3. Add "Learn from your portfolio": plain observations about the user's own allocation, with no judgement of them as an investor.
+4. Add an AI learning companion that explains concepts, refuses to recommend, predict or guarantee, and shows a disclaimer.
+5. Add a stress test: market falls of 10% and 20%, and the largest holding moving 20% either way, labelled "Simulation, not a prediction".
+6. Review the whole product as a 20 to 26 year old who has never invested, and remove jargon.
+7. Check the full journey end to end and fix anything broken or confusing.

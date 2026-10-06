@@ -1,121 +1,60 @@
 # Groww Practice Mode
 
-**A practice investing account for 20–26 year olds that scores how you decide, not what you earned.**
+A practice investing account for 20 to 26 year olds that scores how you decide, not what you made.
 
-Submission for the Groww Product Internship assignment.
-Concept prototype, not affiliated with or endorsed by Groww.
+Prototype for the Groww product internship assignment. Not affiliated with Groww.
 
----
+**Live:** https://groww-practice-mode.vercel.app
 
-## The argument in one paragraph
+## Try it
 
-Gen Z is the most financially literate and least invested cohort India has had, so more education
-attacks a problem that is already solved. The obvious fix, a paper-trading simulator, is worse
-than nothing: scored on returns over a few months, variance beats skill, so whoever takes the most
-concentrated bet wins. The user learns that concentration works, then repeats it with real money.
-
-Practice Mode removes returns from the scoreboard entirely. It captures *why* you bought and *how
-long* you said you'd hold, manufactures a market crash while you're holding, records what you did
-and how long you took to decide, and then shows you the gap between what you said and what you did.
-It ends, in a real ₹100 SIP.
-
----
-
-## Run it
-
-```bash
-npm install
-npm run dev          # http://localhost:5173
-npm run test:engine  # 33 assertions on the simulation and scoring engine
-npm run typecheck
-npm run build
-```
-
-### Reviewer shortcuts
-
-| URL | What you get |
+| Link | What you get |
 | --- | --- |
-| `/` | Clean first-run: the real onboarding |
-| `/?demo` | A run already in progress: four months in, four holdings, one panic survived, one honest mistake in the journal |
-| `/?demo&tab=dna` | Investor DNA and Decision Replay |
-| `/?demo&tab=graduate` | The Graduation Bridge |
-| `/?demo&tab=coach` | The guardrailed coach |
+| [/](https://groww-practice-mode.vercel.app/) | A fresh account, starting from onboarding |
+| [/?demo](https://groww-practice-mode.vercel.app/?demo) | A run already four months in: four holdings, one crash survived, one tip-based purchase in the journal |
+| [/?demo&tab=dna](https://groww-practice-mode.vercel.app/?demo&tab=dna) | Investor DNA and the decision replay |
+| [/?demo&tab=graduate](https://groww-practice-mode.vercel.app/?demo&tab=graduate) | Turning practice into a real SIP |
 
-The `?demo` seed is opt-in. A real first-time user always starts from an empty account.
+On desktop, the buttons beside the phone do the same thing. To see the crash alert, invest in two things, then go to Time and start the year.
 
-**To see the Panic Moment:** make two practice investments, then Time → Start the year. It fires
-when the index first drops 12% below its running peak and blocks the app until you answer.
+## The idea
 
----
+Most simulators score returns, and over a few months returns are mostly luck. In this prototype's easy year, going all-in on Tata Motors because it was rising makes 40.8%, and a spread of funds with reasons makes 20.3%. Investor DNA scores them 26 and 70.
 
-## The six mechanics
-
-| | What it does | Why it exists |
-| --- | --- | --- |
-| **Decision Journal** | Reason + horizon captured on every purchase, before confirmation | The only artifact that makes a replay possible. Capture is deliberately non-judgemental: judgement is deferred until the outcome is known. |
-| **Investor DNA** | Four traits: spread, patience, composure, conviction. **No returns component.** | Removes the incentive to gamble. Verified: a lucky concentrated bet scores **31**, a diversified patient portfolio **94**: with the gambler ahead on money. |
-| **Time Machine** | A year of market in about a minute, across three regimes | A 14-day programme can't show a drawdown in real time, and a drawdown you haven't sat through is the one thing reading can't teach. |
-| **Panic Moment** | A scripted −12% drawdown interrupts and blocks the app. Records the choice *and the seconds taken.* | Under four seconds is a reflex, not a decision. All three options carry identical visual weight: styling one as primary would make the screen a recommendation. |
-| **Decision Replay** | Your stated reasons against what you actually did | "You said five years. You sold in three days." |
-| **Graduation Bridge** | Four behavioural gates, then a real ₹100 SIP carrying over your fund allocation | A practice mode you can live in is a failure. Success is leaving it. Individual stocks are excluded from carry-over. |
-
----
-
-## How it's built
-
-```
-src/
-  data/instruments.ts   9 instruments, each with its plain-English line and its honest catch
-  lib/market.ts         Deterministic market: seeded PRNG, per-instrument beta + idiosyncratic vol,
-                        scripted shock, endpoint pinned in log space
-  lib/dna.ts            Portfolio snapshot, four behavioural traits, portfolio insights
-  lib/coach.ts          Six ordered guardrails, refusals evaluated before helpfulness
-  lib/types.ts          Reasons (with quality weights), horizons, trades, lots, panic events
-  state/store.tsx       Context + localStorage; buy/sell/advance/answerPanic
-  state/demo.ts         The ?demo seed
-  components/ui.tsx     Design primitives: Ring, Spark, Donut, Sheet, jargon tooltip
-  screens/              Seven screens
-  styles/globals.css    Groww tokens, phone shell, full-bleed below 460px
-test/engine.test.ts     33 assertions on product claims, not on functions
-docs/                   The written artifacts
-```
-
-React 18 + TypeScript + Vite. No UI framework, no chart library, no backend, charts are hand-rolled
-SVG, state is local, and the whole bundle is ~74 kB gzipped.
-
----
-
-## What's verified
-
-- **33 engine assertions pass**, each regime lands within 2% of its stated annual return; the
-  crash draws down 35.9% and recovers to +8.5%; paths are byte-identical across runs; judgement
-  outscores luck.
-- **14 adversarial AI prompts** refuse correctly, recommendations, predictions, guarantees,
-  buy/sell instructions, role override, off-topic.
-- **Full journey driven end to end** under browser automation: onboarding → invest → journal →
-  fast-forward → panic → replay → coach. No JS errors.
-- **Mobile verified at 390×844** under device emulation: zero horizontal overflow on all seven tabs.
-
-Two product bugs were found by the engine tests rather than by clicking: the market regimes drifting
-away from the years they claimed to be, and the Spread trait saturating at 100 for any four-holding
-portfolio.
-
----
+- **Every purchase asks why**, and for how long. Nothing is judged at that point.
+- **The market falls on purpose.** The app stops at a 12% fall, and records what you do and how long you take.
+- **Investor DNA** rates spread, patience, composure and conviction. Profit isn't in it.
+- **The replay** shows what you said next to what happened.
+- **It ends in a real SIP** from ₹100 a month, built from the funds you practised with and sized from a short salary plan.
 
 ## Documents
 
 | | |
 | --- | --- |
-| [Strategy canvas](docs/00-strategy-canvas.md) | Why now, segmentation, four lenses, metrics, risks |
-| [The 1-pager](docs/01-one-pager.md) | The case study page: problem, scope, solution and why |
-| [Prompt log](docs/02-prompt-log.md) | Every prompt, what came back, what had to be corrected |
-| [Evals](docs/03-evals.md) | Engine, AI safety, and comprehension evals |
+| [Case study](docs/01-case-study.md) | The one-pager: problem, scope, solution and why |
+| [Prompt log](docs/02-prompt-log.md) | The prompts used to build it, and what each round changed |
+| [Evals](docs/03-evals.md) | What was tested and the real results, including the weak ones |
+| [Strategy note](docs/04-strategy-note.md) | Segmentation, metrics, risks and rollout |
 
----
+## Run it
 
-## Disclaimers
+```bash
+npm install
+npm run dev           # http://localhost:5173
+npm run test:engine   # 91 checks on the market model, scoring, SIP split and coach
+npm run build
+```
 
-All prices, portfolios, market movements and results are **simulated**. Market regimes are modelled
-on the shape of real Indian market years, not replays of them. Nothing here is investment advice,
-no real transaction is possible, and the Graduation Bridge stops at a mock confirmation. It does
-not create a real SIP.
+React, TypeScript and Vite. No backend, no chart library: charts are SVG, and state lives in the browser.
+
+```
+src/data/instruments.ts   nine instruments, each with a one-line description and its catch
+src/lib/market.ts         deterministic modelled years, with price history before day one
+src/lib/dna.ts            the portfolio snapshot, the four traits and the graduation checks
+src/lib/history.ts        replays the trade log into the portfolio-vs-market chart
+src/lib/coach.ts          ordered intent rules; refusals are checked before answers
+src/lib/sip.ts            splits a real SIP so every fund gets at least ₹100
+test/                     engine checks, market stories and the coach prompt sets
+```
+
+All prices and market movements are simulated. The years are shaped like real Indian market years, but they aren't replays of them. Nothing here is investment advice, and no real transaction is possible.

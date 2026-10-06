@@ -41,7 +41,7 @@ export function Home({ snap, go }: { snap: Snapshot; go: (t: Tab) => void }) {
       done: s.day >= TRADING_DAYS,
       locked: snap.positions.length === 0 && s.day === 0,
       title: 'Live through a year',
-      sub: s.day >= TRADING_DAYS ? `${path.regime.label}, survived` : s.day > 0 ? `${progress}% through ${path.regime.label.toLowerCase()}` : 'A year of market in about ten minutes',
+      sub: s.day >= TRADING_DAYS ? `${path.regime.label}, survived` : s.day > 0 ? `${progress}% through ${path.regime.label.toLowerCase()}` : 'A year of market in under a minute',
       onClick: () => go('time'),
     },
     {

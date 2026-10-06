@@ -42,8 +42,8 @@ export function Onboarding() {
             Make your first investing mistakes with money that isn&rsquo;t real.
           </h1>
           <p className="sub" style={{ fontSize: 14.5, marginBottom: 20 }}>
-            You get &#8377;1,00,000 in practice money and a year of market squeezed into about ten
-            minutes. You&rsquo;ll pick investments, watch them fall, decide what to do about it, and find
+            You get &#8377;1,00,000 in practice money and a year of market that plays out in under
+            a minute. You&rsquo;ll pick investments, watch them fall, decide what to do about it, and find
             out what kind of investor you are before it costs you anything.
           </p>
 

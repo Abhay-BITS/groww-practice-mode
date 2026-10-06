@@ -78,6 +78,22 @@ const steady = base({
 const g = overall(traits(gambler, snapshot(gambler)));
 const st = overall(traits(steady, snapshot(steady)));
 ok(`a diversified, patient run outscores a concentrated, impulsive one (${st} vs ${g})`, st > g + 30);
+// The central claim, tested on money as well as score: in the easy year, a
+// lucky all-in bet beats a careful portfolio on returns and still scores far lower.
+{
+  const R = 'calm2017' as const;
+  const mk = (picks: [string, number, ReasonId, HorizonId][]): GameState => {
+    const lots = picks.map(([id, amt, r, h]) => { const pr = priceOn(R, id, 0); return { instrumentId: id, units: amt / pr, cost: pr, reasonId: r, horizonId: h, openedDay: 0 }; });
+    const trades: Trade[] = picks.map(([id, amt, r, h]) => { const pr = priceOn(R, id, 0); return { id, instrumentId: id, kind: 'buy' as const, amount: amt, units: amt / pr, price: pr, day: 0, reasonId: r, horizonId: h }; });
+    return base({ regime: R, day: TRADING_DAYS, cash: STARTING_CASH - picks.reduce((t, x) => t + x[1], 0), lots, trades });
+  };
+  const lucky = mk([['tatamotors', 100000, 'fomo', 'weeks']]);
+  const careful = mk([['nifty50', 40000, 'understand', 'decade'], ['hybrid', 25000, 'diversify', 'years'], ['gold', 15000, 'diversify', 'years'], ['largecap', 20000, 'longterm', 'decade']]);
+  const [ls, cs] = [snapshot(lucky), snapshot(careful)];
+  const [ld, cd] = [overall(traits(lucky, ls)), overall(traits(careful, cs))];
+  ok(`easy year: the lucky all-in bet makes more money (${ls.pnlPct.toFixed(1)}% vs ${cs.pnlPct.toFixed(1)}%)`, ls.pnlPct > cs.pnlPct);
+  ok(`easy year: and still scores far lower (${ld} vs ${cd})`, cd > ld + 30);
+}
 ok('an empty account scores 0, not NaN', overall(traits(base(), snapshot(base()))) === 0);
 ok('every trait stays between 0 and 100', [gambler, steady].every((x) => traits(x, snapshot(x)).every((t) => t.score >= 0 && t.score <= 100)));
 ok('selling at the panic drops Composure below 40', traits(gambler, snapshot(gambler)).find((t) => t.id === 'composure')!.score < 40);

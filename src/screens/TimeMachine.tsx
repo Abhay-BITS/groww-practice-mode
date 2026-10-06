@@ -7,7 +7,7 @@ import { Confirm, inr, J, Lines, pct, SimBadge } from '@/components/ui';
 import type { Snapshot } from '@/lib/dna';
 
 /**
- * A year in about a minute of clock time. You can't sit through a real
+ * A year in about 25 seconds: long enough to watch it happen, short enough to finish. You can't sit through a real
  * drawdown in a two-week trial, and sitting through one is the thing reading
  * about investing can't give you.
  */
@@ -22,7 +22,7 @@ export function TimeMachine({ snap }: { snap: Snapshot }) {
   useEffect(() => {
     if (!running) return;
     if (done || s.pendingPanic) { setRunning(false); return; }
-    const t = window.setInterval(() => advance(4), 120);
+    const t = window.setInterval(() => advance(2), 200);
     return () => window.clearInterval(t);
   }, [running, done, s.pendingPanic, advance]);
 
