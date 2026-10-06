@@ -140,10 +140,7 @@ export default function App() {
             <button className="btn sm" onClick={() => restart(false)}>Start fresh</button>
             <button className="btn sm ghost" onClick={() => restart(true)}>Open a run in progress</button>
           </div>
-          <p className="pitch-foot">
-            Prototype for the Groww product internship assignment. Not affiliated with Groww. Prices are
-            simulated and nothing here is investment advice.
-          </p>
+          <p className="pitch-foot">Concept prototype. Not affiliated with Groww.</p>
         </div>
         <Shell />
       </div>

@@ -66,7 +66,6 @@ export function Onboarding() {
           <button className="btn" onClick={() => setStep('stage')}>
             Get started <ArrowRight size={17} />
           </button>
-          <p className="tiny" style={{ textAlign: 'center', marginTop: 8 }}>Two questions. No real money, no KYC.</p>
         </div>
       </div>
     );
