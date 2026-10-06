@@ -8,7 +8,7 @@ Most people my age who want to invest already know roughly what an index fund is
 
 What you can't get from reading is how you'll act when money you earned is down 20%. A first-time investor has never had money that could fall, so they don't know if they'll hold or panic, and not knowing is a good enough reason to wait another month. Then another.
 
-That's why I think a normal paper-trading simulator is the wrong answer, even though it's the obvious one (it was my first version). Simulators keep score by returns, and over a few months returns are mostly luck. In my prototype's easy year, going all-in on Tata Motors because it was rising made 40.8%. A sensible spread of funds made 20.3%. A returns leaderboard would reward the first person and teach everyone else to copy them.
+That's why I think a normal paper-trading simulator is the wrong answer, even though it's the obvious one. Simulators keep score by returns, and over a few months returns are mostly luck. In my prototype's easy year, going all-in on Tata Motors because it was rising made 40.8%. A sensible spread of funds made 20.3%. A returns leaderboard would reward the first person and teach everyone else to copy them.
 
 **Assumptions:**
 

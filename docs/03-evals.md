@@ -13,7 +13,7 @@ There are four kinds of test, because each one catches a different kind of failu
 
 ## A. Engine checks
 
-These test the claims the product makes, not whether the code runs. Several exist because an earlier version got that exact thing wrong. Those are marked as regressions.
+These test the claims the product makes, not whether the code runs. Several exist because the prototype got that exact thing wrong during the build. Those are marked as regressions.
 
 **The central claim.** If this one fails, the whole idea fails.
 
@@ -50,13 +50,13 @@ The coach must never name something to buy or sell, predict a price, promise a r
 
 I tested it with three sets of prompts, kept apart on purpose:
 
-| Set | Size | When it was written | First version | Now |
+| Set | Size | When it was written | Before the rewrite | Now |
 | --- | --- | --- | --- | --- |
-| Core | 14 | Alongside the first version (7 of them carried over from version 1) | 12 of 14 | 14 of 14 |
-| Reworded | 16 | Later, and run once against the first version before any fix | **4 of 16** | 16 of 16 |
+| Core | 14 | With the first draft of the coach | 12 of 14 | 14 of 14 |
+| Reworded | 16 | Later, and run once against the first draft before any fix | **4 of 16** | 16 of 16 |
 | Holdout | 12 | After the rewrite, before running it even once, and never tuned on | | **4 of 12** |
 
-The first version matched single phrases, so it handled the exact wording it was written for and almost nothing else. The two Core failures were "My friend made 3x on a smallcap, how do I find the next one?", which got a dead-end "I can't help with that", and "Just tell me, index fund or smallcap?", which got an explainer instead of a refusal to choose. Worse, "Is it 100% safe to invest in an index fund?" got an explainer, not a "no".
+The first draft matched single phrases, so it handled the exact wording it was written for and almost nothing else. The two Core failures were "My friend made 3x on a smallcap, how do I find the next one?", which got a dead-end "I can't help with that", and "Just tell me, index fund or smallcap?", which got an explainer instead of a refusal to choose. Worse, "Is it 100% safe to invest in an index fund?" got an explainer, not a "no".
 
 I rewrote it to look for whole families of wording, and added a category for chasing returns. The reworded set went to 16 of 16. But I'd fixed it against those exact prompts, so that result proves very little. That's what the holdout is for, and it scored **4 of 12**.
 
@@ -93,7 +93,7 @@ A script drives a real browser through the whole product as a new user would, at
 | The coach refuses "Is an index fund 100% safe?" with a visible label | Pass |
 | No browser pop-ups and no errors anywhere | Pass |
 
-**Screen sizes.** The "Get started" button is fully visible, nothing scrolls sideways, and the logo loads, at all six: desktop at 100%, 150% and 200% zoom, a short laptop screen, an iPhone SE and an iPhone 14. Before the Round 3 fix in the prompt log, three of the six failed.
+**Screen sizes.** The "Get started" button is fully visible, nothing scrolls sideways, and the logo loads, at all six: desktop at 100%, 150% and 200% zoom, a short laptop screen, an iPhone SE and an iPhone 14. Before the layout fix described in the prompt log, three of the six failed.
 
 ## D. With people
 
@@ -111,4 +111,4 @@ Five people aged 20 to 26 who have never invested, each on their own phone. I re
 
 The fourth task matters most. If people read the DNA score as a measure of returns, the main idea isn't working, and Practice Mode is just a simulator with extra steps.
 
-The closest thing to a real user test so far is my own first use in Round 3 of the prompt log. It found five problems that no automated check had caught.
+The closest thing to a real user test so far is my own first use of it, described in the prompt log. It found five problems that no automated check had caught.

@@ -10,14 +10,7 @@ Prototype for the Groww product internship assignment. Not affiliated with Groww
 
 ## Try it
 
-| Link | What you get |
-| --- | --- |
-| [/](https://groww-practice-mode.vercel.app/) | A fresh account, starting from onboarding |
-| [/?demo](https://groww-practice-mode.vercel.app/?demo) | A run already four months in: four holdings, one crash survived, one tip-based purchase in the journal |
-| [/?demo&tab=dna](https://groww-practice-mode.vercel.app/?demo&tab=dna) | Investor DNA and the decision replay |
-| [/?demo&tab=graduate](https://groww-practice-mode.vercel.app/?demo&tab=graduate) | Turning practice into a real SIP |
-
-On desktop, the buttons beside the phone do the same thing. To see the crash alert, invest in two things, then go to Time and start the year.
+Open [groww-practice-mode.vercel.app](https://groww-practice-mode.vercel.app) on a phone, or on desktop where the phone sits beside a short description. To see the crash alert, invest in two things, then go to Time and start the year.
 
 ## The idea
 
