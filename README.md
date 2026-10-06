@@ -6,6 +6,8 @@ Prototype for the Groww product internship assignment. Not affiliated with Groww
 
 **Live:** https://groww-practice-mode.vercel.app
 
+![Four screens: the reason asked before a purchase, the crash alert, the Investor DNA score, and the decision replay](docs/screens.png)
+
 ## Try it
 
 | Link | What you get |
