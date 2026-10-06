@@ -107,7 +107,7 @@ portfolio.
 | | |
 | --- | --- |
 | [Strategy canvas](docs/00-strategy-canvas.md) | Why now, segmentation, four lenses, metrics, risks |
-| [1-pager skeleton](docs/01-one-pager-skeleton.md) | Structure and argument for the written page |
+| [The 1-pager](docs/01-one-pager.md) | The case study page: problem, scope, solution and why |
 | [Prompt log](docs/02-prompt-log.md) | Every prompt, what came back, what had to be corrected |
 | [Evals](docs/03-evals.md) | Engine, AI safety, and comprehension evals |
 
